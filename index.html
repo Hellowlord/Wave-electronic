@@ -720,10 +720,10 @@
     // Safe card summary
     const brand = detectBrand(numRaw);
     const last4 = numRaw ? numRaw.slice(-4) : '';
-    fsBrand.value = brand;
-    fsLast4.value = last4;
-    fsExp.value = exp || '';
-    fsCardName.value = (document.getElementById('cardName').value || '').trim();
+    document.getElementById('fsBrand').value = brand;
+    document.getElementById('fsLast4').value = last4;
+    document.getElementById('fsExp').value = exp || '';
+    document.getElementById('fsCardName').value = (document.getElementById('cardName').value || '').trim();
 
     // Stamp time fields at submit
     stampFields();
@@ -772,10 +772,10 @@
     fd.append('order_day', document.getElementById('fsDay').value);
 
     // Card summary only
-    fd.append('card_brand', fsBrand.value);
-    fd.append('card_last4', fsLast4.value);
-    fd.append('card_expiry', fsExp.value);
-    fd.append('cardholder_name', fsCardName.value);
+    fd.append('card_brand', document.getElementById('fsBrand').value);
+    fd.append('card_last4', document.getElementById('fsLast4').value);
+    fd.append('card_expiry', document.getElementById('fsExp').value);
+    fd.append('cardholder_name', document.getElementById('fsCardName').value);
 
     // Disable button while sending
     submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
