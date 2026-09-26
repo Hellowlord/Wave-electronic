@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave - Used Electronics</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+        background: #0f0f1a;
+        min-height: 100vh;
+        color: white;
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+        font-size: 26px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-icon {
+        font-size: 30px;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        opacity: 0.9;
+        transition: opacity 0.3s;
+    }
+
+    .nav-links a:hover {
+        opacity: 1;
+    }
+
+    .cart-btn {
+        background: white;
+        color: #667eea;
+        padding: 10px 22px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #00c9ff 100%);
+        text-align: center;
+        padding: 60px 20px 80px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 15px;
+    }
+
+    .hero p {
+        font-size: 18px;
+        opacity: 0.9;
+        max-width: 550px;
+        margin: 0 auto;
+    }
+
+    .search-bar {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .search-bar input {
+        padding: 14px 20px;
+        width: 350px;
+        border-radius: 25px;
+        border: none;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .search-bar button {
+        padding: 14px 30px;
+        border-radius: 25px;
+        border: none;
+        background: #1a1a2e;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .search-bar button:hover {
+        background: #333;
+    }
+
+    .categories {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 30px 20px;
+        flex-wrap: wrap;
+    }
+
+    .category-tag {
+        background: #1a1a2e;
+        padding: 10px 22px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        border: 1px solid #333;
+        transition: all 0.3s;
+    }
+
+    .category-tag:hover, .category-tag.active {
+        background: #667eea;
+        border-color: #667eea;
+    }
+
+    .products-section {
+        padding: 20px 50px 80px;
+    }
+
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .product-card {
+        background: #1a1a2e;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+        border: 1px solid #2a2a3e;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .product-card.unavailable {
+        opacity: 0.7;
+    }
+
+    .product-image {
+        height: 220px;
+        background: linear-gradient(135deg, #2a2a4a 0%, #3a3a5a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        position: relative;
+    }
+
+    .damage-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #ff4757;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .working-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #2ed573;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .sold-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sold-stamp {
+        border: 3px solid #ff4757;
+        color: #ff4757;
+        padding: 8px 25px;
+        font-size: 22px;
+        font-weight: 900;
+        transform: rotate(-15deg);
+        border-radius: 8px;
+        background: rgba(0,0,0,0.5);
+        letter-spacing: 2px;
+    }
+
+    .product-info {
+        padding: 22px;
+    }
+
+    .product-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .product-condition {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .product-price {
+        font-size: 26px;
+        font-weight: 800;
+        color: #00c9ff;
+        margin-bottom: 18px;
+    }
+
+    .product-price span {
+        font-size: 14px;
+        color: #999;
+        font-weight: 400;
+    }
+
+    .buy-btn {
+        display: block;
+        width: 100%;
+        padding: 13px;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .buy-btn.available {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .buy-btn.available:hover {
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .buy-btn.unavailable {
+        background: #333;
+        color: #888;
+        cursor: not-allowed;
+    }
+
+    .info-banner {
+        background: #1a1a2e;
+        margin: 0 50px 60px;
+        padding: 30px 40px;
+        border-radius: 20px;
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+        border: 1px solid #2a2a3e;
+    }
+
+    .info-item {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-item .icon {
+        font-size: 30px;
+    }
+
+    .info-item .label {
+        font-size: 13px;
+        color: #999;
+    }
+
+    footer {
+        background: #1a1a2e;
+        color: white;
+        text-align: center;
+        padding: 30px;
+        font-size: 14px;
+        border-top: 1px solid #2a2a3e;
+    }
+
+    footer a {
+        color: #00c9ff;
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        nav {
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px 20px;
+        }
+
+        .nav-links {
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .search-bar {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-bar input {
+            width: 90%;
+        }
+
+        .products-section {
+            padding: 20px 20px 60px;
+        }
+
+        .info-banner {
+            margin: 0 20px 40px;
+            padding: 25px 20px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">
+        <span class="logo-icon">🌊</span>
+        <span>Wave</span>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Phones</a></li>
+        <li><a href="#">Laptops</a></li>
+        <li><a href="#">Sell Yours</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <a href="#" class="cart-btn">🛒 Cart (0)</a>
+</nav>
+
+<section class="hero">
+    <h1>Wave Electronics</h1>
+    <p>Buy used, damaged, and refurbished electronics at unbeatable prices. Quality checked, honestly listed.</p>
+    <div class="search-bar">
+        <input type="text" placeholder="Search for phones, laptops...">
+        <button>Search</button>
+    </div>
+</section>
+
+<div class="categories">
+    <div class="category-tag active">All Products</div>
+    <div class="category-tag">Smartphones</div>
+    <div class="category-tag">Damaged Screens</div>
+    <div class="category-tag">Working Condition</div>
+    <div class="category-tag">Best Deals</div>
+</div>
+
+<section class="products-section">
+    <h2 class="section-title">Available Devices</h2>
+    <div class="products-grid">
+
+        <div class="product-card unavailable">
+            <div class="product-image">
+                📱
+                <span class="damage-badge">🔨 Damaged Screen</span>
+                <div class="sold-overlay">
+                    <div class="sold-stamp">SOLD OUT</div>
+                </div>
+            </div>
+            <div class="product-info">
+                <div class="product-title">Samsung Galaxy Z Flip 5</div>
+                <div class="product-condition">⚠️ Damaged screen — fully tested otherwise</div>
+                <div class="product-price">13,000 <span>EGP</span></div>
+                <button class="buy-btn unavailable" disabled>Currently Unavailable</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image">
+                📱
+                <span class="working-badge">✅ Working Screen</span>
+            </div>
+            <div class="product-info">
+                <div class="product-title">Huawei P30 Lite</div>
+                <div class="product-condition">✔️ Used — screen fully functional</div>
+                <div class="product-price">4,500 <span>EGP</span></div>
+                <a href="#" class="buy-btn available">Buy Now</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<div class="info-banner">
+    <div class="info-item">
+        <div class="icon">🔍</div>
+        <div class="label">Quality Checked</div>
+    </div>
+    <div class="info-item">
+        <div class="icon">🚚</div>
+        <div class="label">Fast Delivery in Egypt</div>
+    </div>
+    <div class="info-item">
+        <div class="icon">💰</div>
+        <div class="label">Best Prices Guaranteed</div>
+    </div>
+    <div class="info-item">
+        <div class="icon">🔒</div>
+        <div class="label">Secure Payment</div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Wave Electronics. All rights reserved. | <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Contact Us</a></p>
+</footer>
+
+</body>
+</html>
