@@ -1,0 +1,11 @@
+{
+  "lastUpdated": "2026-09-26",
+  "source": "Manual (set from Dubizzle Egypt / Google AI)",
+  "items": {
+    "zflip5_damaged": { "price": 13000, "source": "Your Dubizzle EG check", "url": "" },
+    "p30lite_working": { "price": 4500,  "source": "Your Dubizzle EG check", "url": "" },
+    "receiver_remote": { "price": 15,     "source": "Manual", "url": "" },
+    "huawei_watch_batt": { "price": 350,  "source": "Your Dubizzle EG / Google AI estimate", "url": "" },
+    "vibration_motors": { "price": 30,    "source": "Manual / update from Dubizzle EG", "url": "" }
+  }
+}
