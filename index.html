@@ -1,814 +1,891 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Wave - Used Electronics</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-  body { background: #0f0f1a; min-height: 100vh; color: white; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wave Electronics — Used & Salvage Marketplace</title>
+  <meta name="description" content="Wave Electronics — buy and sell used and damaged electronics in Egypt. Salvage parts, wearables, smartphones, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #0b1020;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --brand: #22d3ee;
+      --brand-2: #10b981;
+      --accent: #f59e0b;
+      --danger: #ef4444;
+      --ok: #22c55e;
+      --card: #111827;
+      --outline: #1f2937;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background: linear-gradient(120deg, #0b1226, #0a0f1d 60%, #0d162f); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    a { color: var(--brand); text-decoration: none; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(2,6,23,0.6);
+      border-bottom: 1px solid rgba(148,163,184,0.08);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 18px 18px; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo {
+      display:grid; place-items:center; width:42px; height:42px; border-radius:12px;
+      background: radial-gradient(120px 60px at 20% 10%, rgba(34,211,238,0.45), transparent 60%),
+                  radial-gradient(120px 60px at 80% 90%, rgba(16,185,129,0.35), transparent 60%),
+                  #0b1020;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35) inset, 0 10px 30px rgba(34,211,238,0.08);
+      font-weight: 800; color:#fff;
+    }
+    .title { font-size: 20px; font-weight: 700; letter-spacing: 0.3px; }
+    .subtitle { font-size: 12px; color: var(--muted); }
 
-  /* Nav */
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: sticky; top: 0; z-index: 100;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
-  .logo { font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-  .logo-icon { font-size: 30px; }
-  .nav-links { display: flex; gap: 30px; list-style: none; }
-  .nav-links a { color: white; text-decoration: none; font-size: 15px; opacity: 0.9; transition: opacity 0.3s; }
-  .nav-links a:hover { opacity: 1; }
-  .cart-btn { background: white; color: #667eea; padding: 10px 22px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 14px; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; align-items:center; }
+    .search {
+      flex:1; min-width: 240px;
+      display:flex; align-items:center; gap:10px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.10);
+      border-radius: 12px; padding: 10px 12px;
+    }
+    .search input {
+      flex:1; background: transparent; border:0; color: var(--text); outline: none; font-size: 14px;
+    }
+    .chipbar { display:flex; gap:8px; flex-wrap: wrap; }
+    .chip {
+      padding:8px 12px; border-radius:999px; font-size: 13px; color: var(--text);
+      background: rgba(15,23,42,0.6);
+      border:1px solid rgba(148,163,184,0.10);
+      cursor:pointer; user-select:none; transition: all .2s;
+    }
+    .chip.active { background: linear-gradient(90deg, rgba(34,211,238,0.18), rgba(16,185,129,0.18)); border-color: rgba(34,211,238,0.35); }
+    .chip:hover { transform: translateY(-1px); }
 
-  /* Hero */
-  .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #00c9ff 100%); text-align: center; padding: 60px 20px 80px; }
-  .hero h1 { font-size: 48px; font-weight: 800; margin-bottom: 15px; }
-  .hero p { font-size: 18px; opacity: 0.9; max-width: 650px; margin: 0 auto; }
-  .search-bar { margin-top: 30px; display: flex; justify-content: center; gap: 10px; }
-  .search-bar input { padding: 14px 20px; width: 350px; border-radius: 25px; border: none; font-size: 15px; outline: none; }
-  .search-bar button { padding: 14px 30px; border-radius: 25px; border: none; background: #1a1a2e; color: white; font-weight: 600; cursor: pointer; transition: background 0.3s; }
-  .search-bar button:hover { background: #333; }
+    main .grid {
+      display:grid; grid-template-columns: repeat( auto-fit, minmax(240px, 1fr)); gap:16px; margin-top:16px;
+    }
+    .card {
+      position: relative;
+      background: radial-gradient(200px 120px at 20% -20%, rgba(34,211,238,0.10), transparent 50%),
+                  radial-gradient(200px 120px at 110% 120%, rgba(16,185,129,0.10), transparent 40%),
+                  rgba(2,6,23,0.65);
+      border: 1px solid rgba(148,163,184,0.10);
+      border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s;
+    }
+    .card:hover { transform: translateY(-2px); border-color: rgba(34,211,238,0.22); }
+    .thumb { width:100%; height: 160px; background: #0b1020; display:block; object-fit: cover; }
+    .card-body { padding: 12px; display:grid; gap:8px; }
+    .name { font-weight: 700; letter-spacing: 0.2px; }
+    .meta { font-size:12px; color: var(--muted); }
+    .price-row { display:flex; align-items:center; justify-content: space-between; gap:8px; }
+    .price { font-weight: 800; font-size: 18px; letter-spacing: 0.3px; }
+    .source { font-size: 11px; color: var(--muted); }
+    .badges { display:flex; gap:6px; flex-wrap: wrap; }
+    .badge {
+      font-size: 10px; padding:4px 8px; border-radius:999px; border:1px solid rgba(148,163,184,0.15);
+      background: rgba(148,163,184,0.06); color:#cbd5e1;
+    }
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:10px; border:1px solid rgba(148,163,184,0.14);
+      background: linear-gradient(180deg, rgba(34,211,238,0.14), rgba(16,185,129,0.10));
+      color:#e6fbff; font-weight: 700; cursor:pointer; transition: transform .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity:.45; cursor:not-allowed; }
+    .soldout {
+      position:absolute; top:8px; right:-30px; transform: rotate(35deg);
+      background: rgba(239,68,68,0.90); color:#fff; padding:6px 42px; font-size: 12px; font-weight: 800;
+      box-shadow: 0 8px 20px rgba(239,68,68,0.35);
+    }
 
-  /* Categories */
-  .categories { display: flex; justify-content: center; gap: 15px; padding: 26px 20px 6px; flex-wrap: wrap; }
-  .category-tag { background: #1a1a2e; padding: 10px 22px; border-radius: 20px; font-size: 14px; cursor: pointer; border: 1px solid #333; transition: all 0.25s; user-select: none; display: inline-flex; gap: 8px; align-items: center; }
-  .category-tag:hover, .category-tag.active { background: #667eea; border-color: #667eea; }
-  .price-meta { text-align: center; color: #9aa; font-size: 12px; margin: 8px 0 16px; }
+    /* Modal */
+    .modal-backdrop {
+      position:fixed; inset:0; display:none; place-items: center; z-index: 50;
+      background: rgba(2,6,23,0.65); backdrop-filter: blur(10px);
+    }
+    .modal-backdrop.open { display:grid; }
+    .modal {
+      width: min(920px, 92vw); max-height: 88vh; overflow: hidden;
+      background: rgba(2,6,23,0.85);
+      border:1px solid rgba(148,163,184,0.12);
+      border-radius: 16px; box-shadow: var(--shadow);
+      display:grid; grid-template-rows: auto 1fr auto;
+    }
+    .modal header { position: sticky; top:0; background: transparent; border:0; }
+    .modal-titlebar {
+      display:flex; align-items:center; justify-content: space-between;
+      padding: 14px 16px; border-bottom:1px solid rgba(148,163,184,0.10);
+      background: rgba(15,23,42,0.55);
+    }
+    .modal-title { font-size: 16px; font-weight: 800; }
+    .close { background: transparent; border:0; color: var(--muted); font-size: 22px; cursor:pointer; }
+    .modal-content {
+      padding:14px 16px; overflow:auto; display:grid; gap:14px;
+      grid-template-columns: 1.15fr 1fr;
+    }
+    @media (max-width: 860px) {
+      .modal-content { grid-template-columns: 1fr; max-height: calc(88vh - 120px); }
+    }
+    .panel {
+      background: rgba(11,16,32,0.55); border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 12px; padding: 12px; display:grid; gap:10px;
+    }
+    .row { display:flex; align-items:center; justify-content: space-between; gap:8px; }
+    .qty input[type="number"] {
+      width: 84px; padding:8px 10px; border-radius:10px; border:1px solid rgba(148,163,184,0.16);
+      background: rgba(2,6,23,0.55); color: var(--text);
+    }
+    .ship-options { display:grid; gap:8px; }
+    .ship-option { display:flex; align-items:center; gap:10px; }
+    .summary { font-size: 14px; display:grid; gap:6px; }
+    .summary .line { display:flex; justify-content: space-between; color:#cbd5e1; }
+    .summary .total { font-weight: 800; font-size: 18px; border-top:1px dashed rgba(148,163,184,0.2); margin-top:6px; padding-top:6px; }
+    .section-title { font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; color: #9fb9c8; font-weight: 800; }
 
-  /* Products */
-  .products-section { padding: 20px 50px 80px; }
-  .section-title { font-size: 28px; margin-bottom: 30px; text-align: center; }
-  .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
-  .product-card { background: #1a1a2e; border-radius: 20px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; border: 1px solid #2a2a3e; }
-  .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2); }
-  .product-card.unavailable { opacity: 0.7; }
-  .product-image { height: 220px; background: linear-gradient(135deg, #2a2a4a 0%, #3a3a5a 100%); display: flex; align-items: center; justify-content: center; font-size: 80px; position: relative; overflow: hidden; }
-  .product-image.has-thumb { font-size: 0; }
-  .product-image .thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05) contrast(1.05); }
-  .damage-badge, .working-badge, .deal-badge { position: absolute; top: 15px; left: 15px; color: white; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: 700; z-index: 2; }
-  .damage-badge { background: #ff4757; }
-  .working-badge { background: #2ed573; }
-  .deal-badge { background: #ffb302; left: auto; right: 15px; color: #222; }
-  .sold-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
-  .sold-stamp { border: 3px solid #ff4757; color: #ff4757; padding: 8px 25px; font-size: 22px; font-weight: 900; transform: rotate(-15deg); border-radius: 8px; background: rgba(0,0,0,0.5); letter-spacing: 2px; }
-  .product-info { padding: 22px; }
-  .product-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .product-condition { font-size: 13px; color: #999; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-  .product-price { font-size: 26px; font-weight: 800; color: #00c9ff; margin-bottom: 6px; }
-  .product-price span { font-size: 14px; color: #999; font-weight: 400; }
-  .price-source { font-size: 12px; color: #9aa; margin-bottom: 12px; }
-  .buy-btn { display: block; width: 100%; padding: 13px; border-radius: 12px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.3s; }
-  .buy-btn.available { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-  .buy-btn.available:hover { box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4); }
-  .buy-btn.unavailable { background: #333; color: #888; cursor: not-allowed; }
+    .form-grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .form-grid-1 { display:grid; grid-template-columns: 1fr; gap:10px; }
+    @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
+    label { font-size: 12px; color:#9db1c0; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea, select {
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(148,163,184,0.16);
+      background: rgba(2,6,23,0.55); color: var(--text); outline: none;
+    }
+    textarea { min-height: 70px; }
 
-  /* Info banner */
-  .info-banner { background: #1a1a2e; margin: 0 50px 60px; padding: 30px 40px; border-radius: 20px; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; border: 1px solid #2a2a3e; }
-  .info-item { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .info-item .icon { font-size: 30px; }
-  .info-item .label { font-size: 13px; color: #999; }
+    .email-status { font-size: 12px; }
+    .email-status.ok { color: var(--ok); }
+    .email-status.bad { color: var(--danger); }
+    .email-status.checking { color: var(--accent); }
 
-  /* Footer */
-  footer { background: #1a1a2e; color: white; text-align: center; padding: 30px; font-size: 14px; border-top: 1px solid #2a2a3e; }
-  footer a { color: #00c9ff; text-decoration: none; }
+    .sticky-bar {
+      position: sticky; bottom: 0; z-index: 5;
+      display:flex; align-items:center; justify-content: space-between; gap:10px;
+      padding: 10px 12px; background: rgba(2,6,23,0.9);
+      border-top: 1px solid rgba(148,163,184,0.12);
+      box-shadow: 0 -10px 20px rgba(0,0,0,0.25);
+    }
+    .sticky-total { font-weight: 800; font-size: 16px; }
+    .btn-big {
+      padding: 12px 16px; font-size: 16px; border-radius: 12px; font-weight: 800;
+      background: linear-gradient(180deg, rgba(34,211,238,0.22), rgba(16,185,129,0.18));
+      border: 1px solid rgba(34,211,238,0.38); color: #eaffff; cursor:pointer;
+    }
+    .btn-big:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* Modal */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
-  .modal { width: 100%; max-width: 660px; background: #141428; border: 1px solid #2a2a3e; border-radius: 16px; overflow: hidden; }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #1a1a2e; }
-  .modal-title { font-size: 18px; font-weight: 800; }
-  .modal-close { background: transparent; border: none; color: #ccc; font-size: 22px; cursor: pointer; }
-  .modal-body { padding: 20px; display: grid; gap: 14px; }
-  .row { display: grid; gap: 8px; }
-  label { font-size: 13px; color: #aaa; }
-  input, textarea, select { background: #0f0f1a; color: #fff; border: 1px solid #2a2a3e; border-radius: 10px; padding: 12px; font-size: 14px; outline: none; }
-  textarea { min-height: 80px; resize: vertical; }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .three-col { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 10px; }
-  .summary { background: #101025; border: 1px solid #2a2a3e; border-radius: 12px; padding: 12px 14px; font-size: 14px; display: grid; gap: 6px; }
-  .summary .line { display: flex; justify-content: space-between; color: #bbb; }
-  .summary .total { color: #00c9ff; font-weight: 800; }
-  .note { font-size: 12px; color: #9aa; line-height: 1.5; }
-  .danger { color: #ff8a8a; }
-  .submit-btn { margin-top: 6px; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
-  .submit-btn:hover { box-shadow: 0 10px 20px rgba(102,126,234,0.3); }
-  .error { color: #ff6b6b; font-size: 12px; }
-  .success { color: #2ed573; font-size: 13px; }
-
-  @media (max-width: 768px) {
-    nav { flex-direction: column; gap: 15px; padding: 15px 20px; }
-    .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; font-size: 13px; }
-    .hero h1 { font-size: 32px; }
-    .search-bar { flex-direction: column; align-items: center; }
-    .search-bar input { width: 90%; }
-    .products-section { padding: 20px 20px 60px; }
-    .info-banner { margin: 0 20px 40px; padding: 25px 20px; }
-    .two-col, .three-col { grid-template-columns: 1fr; }
-  }
-</style>
+    footer { color: var(--muted); font-size: 12px; padding: 36px 18px; text-align:center; }
+    .hint { color: var(--muted); font-size: 12px; }
+  </style>
 </head>
 <body>
-
-<nav>
-  <div class="logo">
-    <span class="logo-icon">🌊</span>
-    <span>Wave</span>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Phones</a></li>
-    <li><a href="#">Laptops</a></li>
-    <li><a href="#">Sell Yours</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <a href="#" class="cart-btn">🛒 Cart (0)</a>
-</nav>
-
-<section class="hero">
-  <h1>Wave Electronics</h1>
-  <p>Buy used, damaged, and refurbished electronics at unbeatable prices. Quality checked, honestly listed.</p>
-  <div class="search-bar">
-    <input id="searchInput" type="text" placeholder="Search for phones, laptops...">
-    <button id="searchBtn">Search</button>
-  </div>
-</section>
-
-<div class="categories">
-  <div class="category-tag active" data-filter="all">All Products</div>
-  <div class="category-tag" data-filter="smartphones">📱 Smartphones</div>
-  <div class="category-tag" data-filter="wearables">⌚ Wearables</div>
-  <div class="category-tag" data-filter="damaged">🛠️ Damaged Screens</div>
-  <div class="category-tag" data-filter="working">✅ Working Condition</div>
-  <div class="category-tag" data-filter="deals">⭐ Best Deals</div>
-</div>
-<div id="pricesBanner" class="price-meta">Prices: using built‑in defaults.</div>
-
-<section class="products-section">
-  <h2 class="section-title">Available Devices</h2>
-  <div class="products-grid" id="productsGrid">
-
-    <!-- Samsung Z Flip 5 - UNAVAILABLE -->
-    <div class="product-card unavailable" data-key="zflip5_damaged" data-categories="smartphones damaged" data-name="Samsung Galaxy Z Flip 5" data-price="13000" data-img="https://placehold.co/800x500/1a1a2e/ffffff?text=Z+Flip+5+(Damaged)">
-      <div class="product-image">
-        📱
-        <span class="damage-badge">🔨 Damaged Screen</span>
-        <div class="sold-overlay"><div class="sold-stamp">SOLD OUT</div></div>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div class="logo">W</div>
+        <div>
+          <div class="title">Wave Electronics</div>
+          <div class="subtitle">Used, salvage, and parts — Egypt</div>
+        </div>
       </div>
-      <div class="product-info">
-        <div class="product-title">Samsung Galaxy Z Flip 5</div>
-        <div class="product-condition">⚠️ Damaged screen — fully tested otherwise</div>
-        <div class="product-price" data-role="price">13,000 <span>EGP</span></div>
-        <div class="price-source" data-role="source"></div>
-        <button class="buy-btn unavailable" disabled>Currently Unavailable</button>
+      <div class="toolbar">
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="#9fb1c0" stroke-width="1.6" stroke-linecap="round" /></svg>
+          <input id="searchInput" placeholder="Search products, e.g. 'Huawei', 'Remote', 'Damaged screen'">
+        </div>
+        <div class="chipbar" id="filters">
+          <div class="chip active" data-filter="all">All</div>
+          <div class="chip" data-filter="smartphones">Smartphones</div>
+          <div class="chip" data-filter="wearables">⌚ Wearables</div>
+          <div class="chip" data-filter="damaged">Damaged Screens</div>
+          <div class="chip" data-filter="working">Working Condition</div>
+          <div class="chip" data-filter="deals">Deals</div>
+        </div>
       </div>
     </div>
+  </header>
 
-    <!-- Huawei P30 Lite - AVAILABLE -->
-    <div class="product-card" data-key="p30lite_working" data-categories="smartphones working" data-name="Huawei P30 Lite" data-price="4500" data-img="https://placehold.co/800x500/1a1a2e/ffffff?text=Huawei+P30+Lite">
-      <div class="product-image">
-        📱
-        <span class="working-badge">✅ Working Screen</span>
+  <main class="container">
+    <div class="grid" id="productGrid">
+
+      <div class="card" data-product-id="zflip5_damaged" data-name="Samsung Galaxy Z Flip 5" data-tags="samsung z flip 5 zflip5 damaged screen foldable smartphone phone" data-cats="smartphones damaged" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Z+Flip+5+%E2%80%94+Damaged+Screen">
+        <img class="thumb" alt="Samsung Galaxy Z Flip 5 — damaged screen" />
+        <div class="card-body">
+          <div class="name">Samsung Galaxy Z Flip 5</div>
+          <div class="meta">Damaged screen — Foldable</div>
+          <div class="price-row">
+            <div class="price" data-price>-</div>
+            <button class="btn buy-btn">Buy Now</button>
+          </div>
+          <div class="badges">
+            <div class="badge">Smartphones</div>
+            <div class="badge">Damaged screen</div>
+          </div>
+          <div class="source" data-price-source></div>
+        </div>
       </div>
-      <div class="product-info">
-        <div class="product-title">Huawei P30 Lite</div>
-        <div class="product-condition">✔️ Used — screen fully functional</div>
-        <div class="product-price" data-role="price">4,500 <span>EGP</span></div>
-        <div class="price-source" data-role="source"></div>
-        <a href="#" class="buy-btn available" data-product="Huawei P30 Lite" data-price="4500">Buy Now</a>
+
+      <div class="card" data-product-id="p30lite_working" data-name="Huawei P30 Lite" data-tags="huawei p30 lite working used smartphone phone" data-cats="smartphones working deals" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+P30+Lite+%E2%80%94+Used">
+        <img class="thumb" alt="Huawei P30 Lite — working screen (used)" />
+        <div class="card-body">
+          <div class="name">Huawei P30 Lite</div>
+          <div class="meta">Working screen — Used</div>
+          <div class="price-row">
+            <div class="price" data-price>-</div>
+            <button class="btn buy-btn">Buy Now</button>
+          </div>
+          <div class="badges">
+            <div class="badge">Smartphones</div>
+            <div class="badge">Working</div>
+            <div class="badge">Deal</div>
+          </div>
+          <div class="source" data-price-source></div>
+        </div>
       </div>
+
+      <div class="card" data-product-id="receiver_remote" data-name="Receiver Remote" data-tags="receiver remote tv stb set top box ir universal" data-cats="deals working" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Receiver+Remote">
+        <img class="thumb" alt="Receiver Remote control" />
+        <div class="card-body">
+          <div class="name">Receiver Remote</div>
+          <div class="meta">Generic IR remote</div>
+          <div class="price-row">
+            <div class="price" data-price>-</div>
+            <button class="btn buy-btn">Buy Now</button>
+          </div>
+          <div class="badges">
+            <div class="badge">Deal</div>
+          </div>
+          <div class="source" data-price-source></div>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="huawei_watch_batt" data-name="Huawei Watch (Battery Not Working)" data-tags="huawei watch wearable battery not working smartwatch" data-cats="wearables damaged" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+Watch+%E2%80%94+Battery+Issue">
+        <img class="thumb" alt="Huawei Watch — battery not working" />
+        <div class="card-body">
+          <div class="name">Huawei Watch (Battery Not Working)</div>
+          <div class="meta">For parts or repair</div>
+          <div class="price-row">
+            <div class="price" data-price>-</div>
+            <button class="btn buy-btn">Buy Now</button>
+          </div>
+          <div class="badges">
+            <div class="badge">⌚ Wearables</div>
+            <div class="badge">Not working</div>
+          </div>
+          <div class="source" data-price-source></div>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="vibration_motors" data-name="Vibration Motors" data-tags="vibration motor dc 3v salvage parts tiny" data-cats="deals working" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Vibration+Motors">
+        <img class="thumb" alt="Small vibration motors" />
+        <div class="card-body">
+          <div class="name">Vibration Motors</div>
+          <div class="meta">Small DC motors (salvaged)</div>
+          <div class="price-row">
+            <div class="price" data-price>-</div>
+            <button class="btn buy-btn">Buy Now</button>
+          </div>
+          <div class="badges">
+            <div class="badge">Deal</div>
+          </div>
+          <div class="source" data-price-source></div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Receiver Remote - AVAILABLE -->
-    <div class="product-card" data-key="receiver_remote" data-categories="working deals" data-name="Receiver Remote" data-price="15" data-img="https://placehold.co/800x500/1a1a2e/ffffff?text=Receiver+Remote">
-      <div class="product-image">
-        🕹️
-        <span class="working-badge">✅ Working</span>
-        <span class="deal-badge">⭐ Deal</span>
+    <p class="hint">Prices load from prices.json at the repository root and can be edited anytime. Sources are shown per item.</p>
+  </main>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal">
+      <div class="modal-titlebar">
+        <div class="modal-title">Checkout</div>
+        <button class="close" id="closeModal" aria-label="Close">×</button>
       </div>
-      <div class="product-info">
-        <div class="product-title">Receiver Remote</div>
-        <div class="product-condition">✔️ Used — tested & working</div>
-        <div class="product-price" data-role="price">15 <span>EGP</span></div>
-        <div class="price-source" data-role="source"></div>
-        <a href="#" class="buy-btn available" data-product="Receiver Remote" data-price="15">Buy Now</a>
+
+      <div class="modal-content">
+        <!-- Left: Order configuration and summary -->
+        <div class="panel" id="orderPanel">
+          <div class="section-title">Order</div>
+
+          <div class="row">
+            <div>
+              <div id="coProductName" style="font-weight:800;"></div>
+              <div class="source" id="coPriceSource"></div>
+            </div>
+            <img id="coThumb" alt="" style="width:84px; height:64px; object-fit:cover; border-radius:10px; border:1px solid rgba(148,163,184,0.12);" />
+          </div>
+
+          <div class="row qty">
+            <label for="coQty">Quantity</label>
+            <input id="coQty" type="number" min="1" value="1">
+          </div>
+
+          <div class="ship-options">
+            <div class="section-title">Shipping</div>
+            <label class="ship-option">
+              <input type="radio" name="shipping" value="standard" checked>
+              <div>Standard (50 EGP) — 2-4 days</div>
+            </label>
+            <label class="ship-option">
+              <input type="radio" name="shipping" value="express">
+              <div>Express (120 EGP) — 1-2 days</div>
+            </label>
+            <label class="ship-option">
+              <input type="radio" name="shipping" value="pickup">
+              <div>Pickup (0 EGP) — Cairo</div>
+            </label>
+          </div>
+
+          <div class="summary">
+            <div class="line"><span>Unit price</span><span id="coUnit">-</span></div>
+            <div class="line"><span>Quantity</span><span id="coQtyEcho">1</span></div>
+            <div class="line"><span>Subtotal</span><span id="coSubtotal">-</span></div>
+            <div class="line"><span>Shipping</span><span id="coShipping">-</span></div>
+            <div class="line"><span>Tax (0%)</span><span id="coTax">0 EGP</span></div>
+            <div class="line total"><span>Total</span><span id="coTotal">-</span></div>
+          </div>
+        </div>
+
+        <!-- Right: Buyer + Payment -->
+        <form class="panel" id="checkoutForm">
+          <div class="section-title">Buyer details</div>
+          <div class="form-grid">
+            <div>
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="you@example.com" required>
+              <div id="emailStatus" class="email-status"></div>
+            </div>
+            <div>
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" placeholder="Full legal name" required>
+            </div>
+            <div>
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="+20..." required>
+            </div>
+            <div>
+              <label for="country">Country</label>
+              <input id="country" name="country" type="text" value="Egypt" required>
+            </div>
+          </div>
+
+          <div class="section-title">Address</div>
+          <div class="form-grid">
+            <div>
+              <label for="address1">Address line 1</label>
+              <input id="address1" name="address_line1" type="text" placeholder="Street, building" required>
+            </div>
+            <div>
+              <label for="address2">Address line 2</label>
+              <input id="address2" name="address_line2" type="text" placeholder="Apartment, floor (optional)">
+            </div>
+            <div>
+              <label for="city">City</label>
+              <input id="city" name="city" type="text" placeholder="City" required>
+            </div>
+            <div>
+              <label for="gov">Governorate</label>
+              <input id="gov" name="governorate" type="text" placeholder="Governorate" required>
+            </div>
+            <div>
+              <label for="postal">Postal code</label>
+              <input id="postal" name="postal_code" type="text" placeholder="Postal code" required>
+            </div>
+            <div>
+              <label for="notes">Order notes</label>
+              <input id="notes" name="notes" type="text" placeholder="Notes for delivery (optional)">
+            </div>
+          </div>
+
+          <div class="section-title">Card (not charged online)</div>
+          <div class="form-grid">
+            <div>
+              <label for="cardholder">Cardholder name</label>
+              <input id="cardholder" type="text" autocomplete="cc-name" placeholder="As shown on card">
+            </div>
+            <div>
+              <label for="cardnumber">Card number</label>
+              <input id="cardnumber" type="password" inputmode="numeric" autocomplete="cc-number" placeholder="•••• •••• •••• ••••">
+            </div>
+            <div>
+              <label for="expiry">Expiry (MM/YY)</label>
+              <input id="expiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY">
+            </div>
+            <div>
+              <label for="cvv">CVV</label>
+              <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV">
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" class="btn" id="submitTop">Place Order</button>
+            <div class="hint">We email you the order details. Only card brand, last 4, and expiry are included for reference — never the full number or CVV.</div>
+          </div>
+        </form>
+      </div>
+
+      <div class="sticky-bar">
+        <div class="sticky-total" id="stickyTotal">Total: -</div>
+        <button class="btn-big" id="submitSticky">Place Order</button>
       </div>
     </div>
-
-    <!-- Huawei Watch (Battery Not Working) - AVAILABLE, default qty = 2 -->
-    <div class="product-card" data-key="huawei_watch_batt" data-categories="wearables damaged deals" data-name="Huawei Watch (Battery Not Working)" data-price="350" data-default-qty="2" data-img="https://placehold.co/800x500/1a1a2e/ffffff?text=Huawei+Watch+(Battery+Not+Working)">
-      <div class="product-image">
-        ⌚
-        <span class="damage-badge">🔋 Battery Not Working</span>
-        <span class="deal-badge">⭐ Deal</span>
-      </div>
-      <div class="product-info">
-        <div class="product-title">Huawei Watch (Battery Not Working)</div>
-        <div class="product-condition">⚠️ Battery does not hold charge — for parts/repair</div>
-        <div class="product-price" data-role="price">350 <span>EGP</span></div>
-        <div class="price-source" data-role="source"></div>
-        <a href="#" class="buy-btn available" data-product="Huawei Watch (Battery Not Working)" data-price="350">Buy Now</a>
-      </div>
-    </div>
-
-    <!-- Vibration Motors - AVAILABLE, default qty = 2 -->
-    <div class="product-card" data-key="vibration_motors" data-categories="wearables working deals" data-name="Vibration Motors" data-price="30" data-default-qty="2" data-img="https://placehold.co/800x500/1a1a2e/ffffff?text=Vibration+Motors">
-      <div class="product-image">
-        ⚙️
-        <span class="working-badge">✅ Working</span>
-        <span class="deal-badge">⭐ Deal</span>
-      </div>
-      <div class="product-info">
-        <div class="product-title">Vibration Motors</div>
-        <div class="product-condition">✔️ Used — tested & working</div>
-        <div class="product-price" data-role="price">30 <span>EGP</span></div>
-        <div class="price-source" data-role="source"></div>
-        <a href="#" class="buy-btn available" data-product="Vibration Motors" data-price="30">Buy Now</a>
-      </div>
-    </div>
-
   </div>
-</section>
 
-<div class="info-banner">
-  <div class="info-item">
-    <div class="icon">🔍</div>
-    <div class="label">Quality Checked</div>
-  </div>
-  <div class="info-item">
-    <div class="icon">🚚</div>
-    <div class="label">Fast Delivery in Egypt</div>
-  </div>
-  <div class="info-item">
-    <div class="icon">💰</div>
-    <div class="label">Best Prices Guaranteed</div>
-  </div>
-  <div class="info-item">
-    <div class="icon">🔒</div>
-    <div class="label">Secure Payment</div>
-  </div>
-</div>
+  <footer>
+    © <span id="year"></span> Wave Electronics • Questions? <a href="mailto:adamsalem815@gmail.com">Email support</a>
+  </footer>
 
-<footer>
-  <p>&copy; 2024 Wave Electronics. All rights reserved. | <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Contact Us</a></p>
-</footer>
+  <script>
+    // Config
+    const FS_ENDPOINT = 'https://formspree.io/f/xoevnzrw';
+    const SHIPPING_PRICES = { standard: 50, express: 120, pickup: 0 };
+    const TAX_RATE = 0;
+    const CURRENCY = 'EGP';
 
-<!-- Checkout Modal -->
-<div class="modal-overlay" id="checkoutOverlay" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-header">
-      <div class="modal-title" id="modalTitle">Checkout</div>
-      <button class="modal-close" id="closeModal" aria-label="Close">×</button>
-    </div>
+    const state = {
+      prices: null,
+      currentProductId: null,
+      currentProductName: null,
+      currentUnitPrice: 0,
+      currentPriceSource: '',
+      currentQty: 1,
+      currentShipping: 'standard',
+      availableMap: {},
+    };
 
-    <form class="modal-body" id="checkoutForm" novalidate>
-      <!-- Order summary -->
-      <div class="summary" id="summaryBox">
-        <div class="line"><span>Product</span><strong id="sumProduct">—</strong></div>
-        <div class="line"><span>Unit Price</span><strong id="sumUnit">—</strong></div>
-        <div class="line"><span>Quantity</span><strong><input id="qtyInput" type="number" min="1" value="1" style="width:80px;text-align:center;background:#0f0f1a;color:#fff;border:1px solid #2a2a3e;border-radius:8px;padding:6px 8px;"></strong></div>
-        <div class="line"><span>Subtotal</span><strong id="sumSubtotal">—</strong></div>
-        <div class="line"><span>Shipping</span>
-          <strong>
-            <select id="shippingMethod" style="background:#0f0f1a;color:#fff;border:1px solid #2a2a3e;border-radius:8px;padding:6px 8px;">
-              <option value="standard">Standard (50 EGP)</option>
-              <option value="express">Express (120 EGP)</option>
-              <option value="pickup">Pickup (0 EGP)</option>
-            </select>
-          </strong>
-        </div>
-        <div class="line"><span>Shipping Cost</span><strong id="sumShip">—</strong></div>
-        <div class="line"><span>Tax</span><strong id="sumTax">0 EGP</strong></div>
-        <div class="line total"><span>Total</span><strong id="sumTotal">—</strong></div>
-      </div>
+    // Utils
+    const byId = (id) => document.getElementById(id);
+    const qs = (sel, el=document) => el.querySelector(sel);
+    const qsa = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const fmt = (n) => new Intl.NumberFormat('en-EG', { style:'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(n).replace('EGP', 'EGP').trim();
 
-      <!-- Buyer contact -->
-      <div class="row">
-        <label for="buyerEmail">Email (required)</label>
-        <input id="buyerEmail" name="email" type="email" placeholder="you@example.com" required />
-        <div class="error" id="emailErr"></div>
-      </div>
+    function setYear() { byId('year').textContent = new Date().getFullYear(); }
 
-      <div class="two-col">
-        <div class="row">
-          <label for="buyerName">Full Name</label>
-          <input id="buyerName" name="name" type="text" placeholder="Your name" />
-        </div>
-        <div class="row">
-          <label for="buyerPhone">Phone</label>
-          <input id="buyerPhone" name="phone" type="tel" placeholder="+20 ..." />
-        </div>
-      </div>
-
-      <!-- Shipping address -->
-      <div class="row">
-        <label for="addrLine1">Address Line 1</label>
-        <input id="addrLine1" name="address_line1" type="text" placeholder="Street and number" />
-      </div>
-      <div class="row">
-        <label for="addrLine2">Address Line 2 (optional)</label>
-        <input id="addrLine2" name="address_line2" type="text" placeholder="Apartment, suite, etc." />
-      </div>
-      <div class="three-col">
-        <div class="row">
-          <label for="addrCity">City</label>
-          <input id="addrCity" name="city" type="text" placeholder="City" />
-        </div>
-        <div class="row">
-          <label for="addrGov">Governorate</label>
-          <input id="addrGov" name="governorate" type="text" placeholder="Governorate" />
-        </div>
-        <div class="row">
-          <label for="addrZip">Postal Code</label>
-          <input id="addrZip" name="postal_code" type="text" placeholder="ZIP" />
-        </div>
-      </div>
-      <div class="row">
-        <label for="addrCountry">Country</label>
-        <input id="addrCountry" name="country" type="text" value="Egypt" />
-      </div>
-
-      <!-- Card details (UI; only safe summary is sent) -->
-      <div class="row">
-        <label for="cardName">Cardholder Name</label>
-        <input id="cardName" type="text" placeholder="Name on card" autocomplete="cc-name" />
-      </div>
-      <div class="row">
-        <label for="cardNumber">Card Number</label>
-        <input id="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" />
-      </div>
-      <div class="two-col">
-        <div class="row">
-          <label for="cardExpiry">Expiry (MM/YY)</label>
-          <input id="cardExpiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" />
-        </div>
-        <div class="row">
-          <label for="cardCvc">CVV</label>
-          <input id="cardCvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" maxlength="4" />
-        </div>
-      </div>
-      <div class="note danger">
-        This static site does NOT process payments. Only card brand, last 4, and expiry are sent via Formspree.
-      </div>
-      <div class="error" id="cardErr"></div>
-
-      <div class="row">
-        <label for="buyerNotes">Order Notes (optional)</label>
-        <textarea id="buyerNotes" name="notes" placeholder="Any extra info or preferred delivery time"></textarea>
-      </div>
-
-      <div class="row" style="display:flex;align-items:center;gap:10px;">
-        <input id="acceptTos" type="checkbox" />
-        <label for="acceptTos">I confirm the details above are correct and I agree to the terms</label>
-      </div>
-
-      <!-- Hidden fields sent to Formspree -->
-      <input type="hidden" name="_subject" id="fsSubject" value="New Order via Wave" />
-      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-      <input type="hidden" name="product" id="fsProduct" value="">
-      <input type="hidden" name="unit_price" id="fsUnitPrice" value="">
-      <input type="hidden" name="quantity" id="fsQty" value="1">
-      <input type="hidden" name="subtotal" id="fsSubtotal" value="">
-      <input type="hidden" name="shipping_method" id="fsShipMethod" value="">
-      <input type="hidden" name="shipping_cost" id="fsShipCost" value="">
-      <input type="hidden" name="tax" id="fsTax" value="0">
-      <input type="hidden" name="total" id="fsTotal" value="">
-      <input type="hidden" name="currency" value="EGP">
-
-      <!-- Environment / timestamp -->
-      <input type="hidden" name="site_url" id="fsSite" value="">
-      <input type="hidden" name="page_title" id="fsTitle" value="">
-      <input type="hidden" name="referrer" id="fsRef" value="">
-      <input type="hidden" name="user_agent" id="fsUA" value="">
-      <input type="hidden" name="language" id="fsLang" value="">
-      <input type="hidden" name="timezone_name" id="fsTz" value="">
-      <input type="hidden" name="timezone_offset_minutes" id="fsTzOff" value="">
-      <input type="hidden" name="screen" id="fsScreen" value="">
-
-      <!-- Explicit time/day/year fields -->
-      <input type="hidden" name="order_iso" id="fsISO" value="">
-      <input type="hidden" name="order_date" id="fsDate" value="">
-      <input type="hidden" name="order_time" id="fsTime" value="">
-      <input type="hidden" name="order_day_of_week" id="fsDow" value="">
-      <input type="hidden" name="order_year" id="fsYear" value="">
-      <input type="hidden" name="order_month" id="fsMonth" value="">
-      <input type="hidden" name="order_day" id="fsDay" value="">
-
-      <!-- Card summary only -->
-      <input type="hidden" name="card_brand" id="fsBrand" value="">
-      <input type="hidden" name="card_last4" id="fsLast4" value="">
-      <input type="hidden" name="card_expiry" id="fsExp" value="">
-      <input type="hidden" name="cardholder_name" id="fsCardName" value="">
-
-      <button class="submit-btn" type="submit" id="submitBtn">Send Order</button>
-      <div class="note">Orders are sent to Formspree and forwarded to your email. Cards are NOT charged here.</div>
-      <div class="success" id="successMsg" style="display:none;">✅ Order sent! Redirecting...</div>
-      <div class="error" id="formErr" style="display:none;">❌ Something went wrong. Please try again.</div>
-    </form>
-  </div>
-</div>
-
-<script>
-  // ====== CONFIG ======
-  const FS_ENDPOINT = 'https://formspree.io/f/xoevnzrw';
-  const SHIPPING_PRICES = { standard: 50, express: 120, pickup: 0 };
-  const TAX_RATE = 0; // 0% for now
-
-  // ===== Simple Search =====
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.getElementById('searchBtn');
-  const productCards = Array.from(document.querySelectorAll('.product-card'));
-  function applySearch() {
-    const q = (searchInput.value || '').toLowerCase().trim();
-    productCards.forEach(card => {
-      const title = card.querySelector('.product-title').textContent.toLowerCase();
-      card.style.display = (!q || title.includes(q)) ? '' : 'none';
-    });
-  }
-  searchBtn.addEventListener('click', e => { e.preventDefault(); applySearch(); });
-  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applySearch(); } });
-
-  // ===== Categories Filter =====
-  const tags = document.querySelectorAll('.category-tag');
-  tags.forEach(tag => tag.addEventListener('click', () => {
-    tags.forEach(t => t.classList.remove('active'));
-    tag.classList.add('active');
-    const filter = tag.dataset.filter;
-    productCards.forEach(card => {
-      const cats = (card.dataset.categories || '').split(/\s+/);
-      card.style.display = (filter === 'all' || cats.includes(filter)) ? '' : 'none';
-    });
-  }));
-
-  // ===== Helpers =====
-  const fmtEGP = (n) => `${Number(n || 0).toLocaleString()} EGP`;
-  function onlyDigits(s){ return (s||'').replace(/\D/g, ''); }
-  function detectBrand(num) {
-    if (/^4/.test(num)) return 'Visa';
-    if (/^5[1-5]/.test(num) || /^(222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)/.test(num)) return 'Mastercard';
-    if (/^3[47]/.test(num)) return 'American Express';
-    if (/^6(?:011|5)/.test(num)) return 'Discover';
-    return 'Card';
-  }
-  function luhnOK(num){
-    let sum=0, alt=false;
-    for (let i=num.length-1;i>=0;i--){
-      let n = parseInt(num[i],10);
-      if (alt){ n*=2; if(n>9)n-=9; }
-      sum+=n; alt=!alt;
-    }
-    return sum % 10 === 0 && num.length >= 13 && num.length <= 19;
-  }
-  function expiryOK(mmYY){
-    const m = mmYY.match(/^(\d{2})\/(\d{2})$/);
-    if(!m) return false;
-    let mm = +m[1], yy = +m[2];
-    if(mm<1 || mm>12) return false;
-    const year = 2000 + yy;
-    const now = new Date();
-    const lastDay = new Date(year, mm, 0);
-    return lastDay >= new Date(now.getFullYear(), now.getMonth(), 1);
-  }
-  function stampFields() {
-    const now = new Date();
-    const iso = now.toISOString();
-    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-    const offMin = -now.getTimezoneOffset();
-    const dow = now.toLocaleDateString(undefined, { weekday: 'long' });
-    const y = now.getFullYear();
-    const m = now.getMonth() + 1;
-    const d = now.getDate();
-    const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
-    document.getElementById('fsISO').value = iso;
-    document.getElementById('fsDate').value = dateStr;
-    document.getElementById('fsTime').value = timeStr;
-    document.getElementById('fsDow').value = dow;
-    document.getElementById('fsYear').value = String(y);
-    document.getElementById('fsMonth').value = String(m);
-    document.getElementById('fsDay').value = String(d);
-
-    document.getElementById('fsSite').value = window.location.href;
-    document.getElementById('fsTitle').value = document.title;
-    document.getElementById('fsRef').value = document.referrer || '';
-    document.getElementById('fsUA').value = navigator.userAgent || '';
-    document.getElementById('fsLang').value = navigator.language || '';
-    document.getElementById('fsTz').value = tzName;
-    document.getElementById('fsTzOff').value = String(offMin);
-    const scr = window.screen; document.getElementById('fsScreen').value = `${scr.width}x${scr.height}`;
-  }
-
-  // ===== Checkout Modal + Buy Flow =====
-  const overlay = document.getElementById('checkoutOverlay');
-  const closeModalBtn = document.getElementById('closeModal');
-  const checkoutForm = document.getElementById('checkoutForm');
-  const sumProduct = document.getElementById('sumProduct');
-  const sumUnit = document.getElementById('sumUnit');
-  const sumSubtotal = document.getElementById('sumSubtotal');
-  const sumShip = document.getElementById('sumShip');
-  const sumTax = document.getElementById('sumTax');
-  const sumTotal = document.getElementById('sumTotal');
-  const qtyInput = document.getElementById('qtyInput');
-  const shipSelect = document.getElementById('shippingMethod');
-  const submitBtn = document.getElementById('submitBtn');
-  const buyerEmail = document.getElementById('buyerEmail');
-  const emailErr = document.getElementById('emailErr');
-  const formErr = document.getElementById('formErr');
-  const successMsg = document.getElementById('successMsg');
-
-  // Hidden order fields
-  const fsSubject = document.getElementById('fsSubject');
-  const fsProduct = document.getElementById('fsProduct');
-  const fsUnitPrice = document.getElementById('fsUnitPrice');
-  const fsQty = document.getElementById('fsQty');
-  const fsSubtotal = document.getElementById('fsSubtotal');
-  const fsShipMethod = document.getElementById('fsShipMethod');
-  const fsShipCost = document.getElementById('fsShipCost');
-  const fsTax = document.getElementById('fsTax');
-  const fsTotal = document.getElementById('fsTotal');
-
-  // Card inputs (no name attributes, not sent)
-  const cardName = document.getElementById('cardName');
-  const cardNumber = document.getElementById('cardNumber');
-  const cardExpiry = document.getElementById('cardExpiry');
-  const cardCvc = document.getElementById('cardCvc');
-  const cardErr = document.getElementById('cardErr');
-  const fsBrand = document.getElementById('fsBrand');
-  const fsLast4 = document.getElementById('fsLast4');
-  const fsExp = document.getElementById('fsExp');
-  const fsCardName = document.getElementById('fsCardName');
-
-  let currentProduct = { name: '', price: 0 };
-  let currentDefaultQty = 1;
-
-  function openModal() {
-    overlay.style.display = 'flex';
-    overlay.setAttribute('aria-hidden', 'false');
-    setTimeout(() => buyerEmail.focus(), 50);
-  }
-  function closeModal() {
-    overlay.style.display = 'none';
-    overlay.setAttribute('aria-hidden', 'true');
-    checkoutForm.reset();
-    qtyInput.value = 1; // reset default for next time
-    emailErr.textContent = '';
-    cardErr.textContent = '';
-    formErr.style.display = 'none';
-    successMsg.style.display = 'none';
-  }
-
-  function recalc() {
-    const unit = currentProduct.price || 0;
-    const qty = Math.max(1, parseInt(qtyInput.value || String(currentDefaultQty || 1), 10));
-    qtyInput.value = qty;
-    const subtotal = unit * qty;
-    const method = shipSelect.value || 'standard';
-    const shipCost = SHIPPING_PRICES[method] ?? 0;
-    const tax = Math.round(subtotal * TAX_RATE);
-    const total = subtotal + shipCost + tax;
-
-    sumUnit.textContent = fmtEGP(unit);
-    sumSubtotal.textContent = fmtEGP(subtotal);
-    sumShip.textContent = fmtEGP(shipCost);
-    sumTax.textContent = fmtEGP(tax);
-    sumTotal.textContent = fmtEGP(total);
-
-    // Hidden fields for Formspree
-    fsUnitPrice.value = `${unit}`;
-    fsQty.value = `${qty}`;
-    fsSubtotal.value = `${subtotal}`;
-    fsShipMethod.value = method;
-    fsShipCost.value = `${shipCost}`;
-    fsTax.value = `${tax}`;
-    fsTotal.value = `${total}`;
-  }
-
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.buy-btn.available');
-    if (!btn) return;
-    e.preventDefault();
-    const card = btn.closest('.product-card');
-    const name = btn.dataset.product || card.dataset.name;
-    // Use up-to-date price from card dataset
-    const price = Number(card.dataset.price || btn.dataset.price || 0);
-    const defQty = Number(card?.dataset.defaultQty || 1);
-    currentProduct = { name, price };
-    currentDefaultQty = defQty;
-
-    sumProduct.textContent = name;
-    fsProduct.value = name;
-    fsUnitPrice.value = `${price}`;
-    fsSubject.value = `Order: ${name} (${fmtEGP(price)})`;
-
-    shipSelect.value = 'standard';
-    qtyInput.value = defQty; // default qty per product (watch/motors = 2, others = 1)
-    recalc();
-    stampFields();
-    openModal();
-  });
-
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-  document.getElementById('closeModal').addEventListener('click', closeModal);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-  qtyInput.addEventListener('input', recalc);
-  shipSelect.addEventListener('change', recalc);
-
-  // Card formatting
-  cardNumber.addEventListener('input', () => {
-    let v = onlyDigits(cardNumber.value).slice(0,19);
-    cardNumber.value = v.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
-  });
-  cardExpiry.addEventListener('input', () => {
-    let v = onlyDigits(cardExpiry.value).slice(0,4);
-    if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
-    cardExpiry.value = v;
-  });
-  cardCvc.addEventListener('input', () => { cardCvc.value = onlyDigits(cardCvc.value).slice(0,4); });
-
-  function validEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-
-  // Prime environment fields once
-  (function primeEnv(){
-    document.getElementById('fsSite').value = window.location.href;
-    document.getElementById('fsTitle').value = document.title;
-    document.getElementById('fsRef').value = document.referrer || '';
-    document.getElementById('fsUA').value = navigator.userAgent || '';
-    document.getElementById('fsLang').value = navigator.language || '';
-    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-    document.getElementById('fsTz').value = tzName;
-    document.getElementById('fsTzOff').value = String(-new Date().getTimezoneOffset());
-    const scr = window.screen; document.getElementById('fsScreen').value = `${scr.width}x${scr.height}`;
-  })();
-
-  // ===== Thumbnails: insert <img> if data-img is provided =====
-  (function applyThumbnails(){
-    document.querySelectorAll('.product-card').forEach(card => {
-      const url = card.dataset.img;
-      if (!url) return;
-      const imgWrap = card.querySelector('.product-image');
-      const img = document.createElement('img');
-      img.src = url;
-      img.alt = card.dataset.name || 'Product image';
-      img.className = 'thumb';
-      imgWrap.classList.add('has-thumb');
-      imgWrap.prepend(img);
-    });
-  })();
-
-  // ===== Load prices from prices.json =====
-  async function loadPrices(){
-    const banner = document.getElementById('pricesBanner');
-    try {
-      const res = await fetch('prices.json', { cache: 'no-store' });
-      if (!res.ok) throw new Error('Not found');
-      const data = await res.json();
-      const items = data.items || {};
-      const last = data.lastUpdated || '';
-      const srcDefault = data.source || data.sourceDefault || 'Manual';
-      banner.textContent = `Prices updated ${last || '—'} • Source: ${srcDefault}`;
-
-      document.querySelectorAll('.product-card').forEach(card => {
-        const key = card.dataset.key;
-        if (!key) return;
-        const conf = items[key];
-        if (!conf || typeof conf.price === 'undefined') return;
-
-        // Update dataset + visible price
-        card.dataset.price = String(conf.price);
-        const priceEl = card.querySelector('[data-role="price"]');
-        if (priceEl) priceEl.innerHTML = `${Number(conf.price).toLocaleString()} <span>EGP</span>`;
-
-        // Update Buy button data-price
-        const buyBtn = card.querySelector('.buy-btn.available');
-        if (buyBtn) buyBtn.dataset.price = String(conf.price);
-
-        // Source note
-        const srcEl = card.querySelector('[data-role="source"]');
-        if (srcEl) srcEl.textContent = conf.source
-          ? `Source: ${conf.source}${conf.url ? ' • ' + conf.url : ''}`
-          : `Source: ${srcDefault}`;
+    function loadThumbs() {
+      qsa('.card').forEach(card => {
+        const img = card.dataset.img;
+        const el = qs('.thumb', card);
+        if (img && el) el.src = img;
       });
-    } catch (e) {
-      banner.textContent = 'Prices: using built‑in defaults (prices.json not found).';
-    }
-  }
-  loadPrices();
-
-  // ===== Submit to Formspree =====
-  checkoutForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    emailErr.textContent = '';
-    cardErr.textContent = '';
-    formErr.style.display = 'none';
-    successMsg.style.display = 'none';
-
-    // Basic validation
-    const email = (buyerEmail.value || '').trim();
-    if (!validEmail(email)) { emailErr.textContent = 'Please enter a valid email.'; return; }
-    if (!document.getElementById('acceptTos').checked) {
-      formErr.textContent = 'Please confirm the details and accept the terms.'; formErr.style.display = 'block'; return;
     }
 
-    // Card validation (UI only; not sent)
-    const numRaw = onlyDigits(document.getElementById('cardNumber').value);
-    const exp = document.getElementById('cardExpiry').value.trim();
-    const cvc = onlyDigits(document.getElementById('cardCvc').value);
-    let ok = true;
-    if (numRaw && !luhnOK(numRaw)) ok = false;
-    if (exp && !expiryOK(exp)) ok = false;
-    if (cvc && !(cvc.length === 3 || cvc.length === 4)) ok = false;
-    if (!ok) { cardErr.textContent = 'Card details look invalid.'; return; }
+    function applyFilters() {
+      const active = qs('.chip.active')?.dataset.filter || 'all';
+      const q = byId('searchInput').value.trim().toLowerCase();
+      qsa('.card').forEach(card => {
+        const cats = (card.dataset.cats || '').split(/\s+/);
+        const matchesCat = active === 'all' ? true : cats.includes(active);
+        const hay = (card.dataset.name + ' ' + (card.dataset.tags || '')).toLowerCase();
+        const matchesSearch = !q || hay.includes(q);
+        card.style.display = (matchesCat && matchesSearch) ? '' : 'none';
+      });
+    }
 
-    // Safe card summary
-    const brand = detectBrand(numRaw);
-    const last4 = numRaw ? numRaw.slice(-4) : '';
-    document.getElementById('fsBrand').value = brand;
-    document.getElementById('fsLast4').value = last4;
-    document.getElementById('fsExp').value = exp || '';
-    document.getElementById('fsCardName').value = (document.getElementById('cardName').value || '').trim();
-
-    // Stamp time fields at submit
-    stampFields();
-
-    // Build whitelist FormData
-    const fd = new FormData();
-    fd.append('_subject', fsSubject.value);
-    fd.append('product', fsProduct.value);
-    fd.append('unit_price', fsUnitPrice.value);
-    fd.append('quantity', document.getElementById('fsQty').value);
-    fd.append('subtotal', document.getElementById('fsSubtotal').value);
-    fd.append('shipping_method', document.getElementById('fsShipMethod').value);
-    fd.append('shipping_cost', document.getElementById('fsShipCost').value);
-    fd.append('tax', document.getElementById('fsTax').value);
-    fd.append('total', document.getElementById('fsTotal').value);
-    fd.append('currency', 'EGP');
-
-    fd.append('email', email);
-    fd.append('name', (document.getElementById('buyerName').value || '').trim());
-    fd.append('phone', (document.getElementById('buyerPhone').value || '').trim());
-    fd.append('address_line1', (document.getElementById('addrLine1').value || '').trim());
-    fd.append('address_line2', (document.getElementById('addrLine2').value || '').trim());
-    fd.append('city', (document.getElementById('addrCity').value || '').trim());
-    fd.append('governorate', (document.getElementById('addrGov').value || '').trim());
-    fd.append('postal_code', (document.getElementById('addrZip').value || '').trim());
-    fd.append('country', (document.getElementById('addrCountry').value || '').trim());
-    fd.append('notes', (document.getElementById('buyerNotes').value || '').trim());
-
-    // Env + timestamp
-    fd.append('site_url', document.getElementById('fsSite').value);
-    fd.append('page_title', document.getElementById('fsTitle').value);
-    fd.append('referrer', document.getElementById('fsRef').value);
-    fd.append('user_agent', document.getElementById('fsUA').value);
-    fd.append('language', document.getElementById('fsLang').value);
-    fd.append('timezone_name', document.getElementById('fsTz').value);
-    fd.append('timezone_offset_minutes', document.getElementById('fsTzOff').value);
-    fd.append('screen', document.getElementById('fsScreen').value);
-
-    // Explicit time/day/year
-    fd.append('order_iso', document.getElementById('fsISO').value);
-    fd.append('order_date', document.getElementById('fsDate').value);
-    fd.append('order_time', document.getElementById('fsTime').value);
-    fd.append('order_day_of_week', document.getElementById('fsDow').value);
-    fd.append('order_year', document.getElementById('fsYear').value);
-    fd.append('order_month', document.getElementById('fsMonth').value);
-    fd.append('order_day', document.getElementById('fsDay').value);
-
-    // Card summary only
-    fd.append('card_brand', document.getElementById('fsBrand').value);
-    fd.append('card_last4', document.getElementById('fsLast4').value);
-    fd.append('card_expiry', document.getElementById('fsExp').value);
-    fd.append('cardholder_name', document.getElementById('fsCardName').value);
-
-    // Disable button while sending
-    submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
-
-    try {
-      const res = await fetch(FS_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: fd });
-      if (res.ok) {
-        successMsg.style.display = 'block';
-        // Redirect to Thank You with summary
-        const params = new URLSearchParams({
-          product: fsProduct.value || currentProduct.name || 'Item',
-          qty: document.getElementById('fsQty').value || '1',
-          total: document.getElementById('fsTotal').value || '',
-          date: document.getElementById('fsDate').value || '',
-          time: document.getElementById('fsTime').value || ''
+    function bindFilters() {
+      qsa('#filters .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          qsa('#filters .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          applyFilters();
         });
-        setTimeout(() => { window.location.href = 'thank-you.html?' + params.toString(); }, 600);
-      } else {
-        const data = await res.json().catch(() => ({}));
-        formErr.textContent = data?.errors?.map(e=>e.message).join(', ') || 'Submission failed.';
-        formErr.style.display = 'block';
-      }
-    } catch (err) {
-      formErr.textContent = 'Network error. Please try again.';
-      formErr.style.display = 'block';
-    } finally {
-      submitBtn.disabled = false; submitBtn.textContent = 'Send Order';
+      });
+      byId('searchInput').addEventListener('input', applyFilters);
     }
-  });
 
-  // Default to "All" visible
-  document.querySelector('.category-tag[data-filter="all"]').click();
-</script>
+    async function loadPrices() {
+      try {
+        const res = await fetch('./prices.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('prices.json not found');
+        const data = await res.json();
+        state.prices = data.items || data;
+        updateUIWithPrices();
+      } catch (e) {
+        console.warn('Failed to load prices.json', e);
+        // Fallback: embed minimal defaults
+        state.prices = {
+          zflip5_damaged: { price: 13000, available: false, notes: 'SOLD OUT', source: 'Manual' },
+          p30lite_working: { price: 4500, available: true, notes: 'Used — working screen', source: 'Manual' },
+          receiver_remote: { price: 15, available: true, notes: 'Generic remote', source: 'Manual' },
+          huawei_watch_batt: { price: 800, available: true, notes: 'Battery not working', source: 'Manual' },
+          vibration_motors: { price: 35, available: true, notes: 'Mini DC motors', source: 'Manual' },
+        };
+        updateUIWithPrices();
+      }
+    }
 
+    function updateUIWithPrices() {
+      qsa('.card').forEach(card => {
+        const pid = card.dataset.productId;
+        const priceEl = qs('[data-price]', card);
+        const srcEl = qs('[data-price-source]', card);
+        const btn = qs('.buy-btn', card);
+
+        const item = state.prices[pid];
+        if (item) {
+          priceEl.textContent = `${fmt(item.price)}`;
+          srcEl.textContent = item.source ? `Source: ${item.source}${item.notes ? ' — ' + item.notes : ''}` : (item.notes || '');
+          const available = item.available !== false; // default true
+          state.availableMap[pid] = available;
+          btn.disabled = !available;
+          // SOLD OUT ribbon
+          let ribbon = qs('.soldout', card);
+          if (!available) {
+            if (!ribbon) {
+              ribbon = document.createElement('div');
+              ribbon.className = 'soldout';
+              ribbon.textContent = 'SOLD OUT';
+              card.appendChild(ribbon);
+            }
+          } else {
+            if (ribbon) ribbon.remove();
+          }
+        } else {
+          priceEl.textContent = '-';
+          srcEl.textContent = '';
+          btn.disabled = true;
+        }
+
+        // Bind buy button
+        btn?.addEventListener('click', () => openCheckout(card));
+      });
+      applyFilters();
+    }
+
+    function openCheckout(card) {
+      const pid = card.dataset.productId;
+      if (!state.availableMap[pid]) return;
+
+      state.currentProductId = pid;
+      state.currentProductName = card.dataset.name;
+      state.currentUnitPrice = state.prices[pid]?.price || 0;
+      state.currentPriceSource = state.prices[pid]?.source || '';
+      state.currentQty = parseInt(card.dataset.defaultQty || '1', 10) || 1;
+      state.currentShipping = 'standard';
+
+      // Fill UI
+      byId('coProductName').textContent = state.currentProductName;
+      byId('coPriceSource').textContent = (state.prices[pid]?.notes || '') + (state.currentPriceSource ? ` — Source: ${state.currentPriceSource}` : '');
+      byId('coThumb').src = card.dataset.img || '';
+      byId('coQty').value = state.currentQty;
+
+      // Reset shipping selection
+      qsa('input[name="shipping"]').forEach(r => r.checked = (r.value === 'standard'));
+
+      // Update summary
+      refreshSummary();
+
+      // Open modal
+      byId('checkoutModal').classList.add('open');
+
+      // Pre-fill name if present from previous
+      const nameVal = localStorage.getItem('wave_name');
+      if (nameVal) byId('name').value = nameVal;
+      const emailVal = localStorage.getItem('wave_email');
+      if (emailVal) { byId('email').value = emailVal; verifyEmailField(false); }
+      const phoneVal = localStorage.getItem('wave_phone');
+      if (phoneVal) byId('phone').value = phoneVal;
+    }
+
+    function closeCheckout() {
+      byId('checkoutModal').classList.remove('open');
+    }
+
+    function refreshSummary() {
+      const qty = parseInt(byId('coQty').value || '1', 10);
+      const shipping = qsa('input[name="shipping"]').find(r => r.checked)?.value || 'standard';
+
+      state.currentQty = Math.max(1, qty);
+      state.currentShipping = shipping;
+
+      const unit = state.currentUnitPrice;
+      const subtotal = unit * state.currentQty;
+      const shipCost = SHIPPING_PRICES[shipping] || 0;
+      const tax = 0;
+      const total = subtotal + shipCost + tax;
+
+      byId('coUnit').textContent = fmt(unit);
+      byId('coQtyEcho').textContent = state.currentQty;
+      byId('coSubtotal').textContent = fmt(subtotal);
+      byId('coShipping').textContent = fmt(shipCost);
+      byId('coTax').textContent = fmt(tax);
+      byId('coTotal').textContent = fmt(total);
+      byId('stickyTotal').textContent = `Total: ${fmt(total)}`;
+    }
+
+    function bindCheckoutUI() {
+      byId('closeModal').addEventListener('click', closeCheckout);
+      byId('coQty').addEventListener('input', () => { if (byId('coQty').value < 1) byId('coQty').value = 1; refreshSummary(); });
+      qsa('input[name="shipping"]').forEach(r => r.addEventListener('change', refreshSummary));
+
+      // Sync both submit buttons
+      const form = byId('checkoutForm');
+      const submitTop = byId('submitTop');
+      const submitSticky = byId('submitSticky');
+      const setBusy = (busy) => {
+        submitTop.disabled = busy;
+        submitSticky.disabled = busy;
+        submitTop.textContent = busy ? 'Placing order…' : 'Place Order';
+        submitSticky.textContent = busy ? 'Placing order…' : 'Place Order';
+      };
+      // Intercept submits
+      form.addEventListener('submit', (e) => { e.preventDefault(); handleSubmit(setBusy); });
+      submitSticky.addEventListener('click', (e) => { e.preventDefault(); form.requestSubmit(); });
+      // Save local fields
+      byId('name').addEventListener('change', () => localStorage.setItem('wave_name', byId('name').value));
+      byId('email').addEventListener('change', () => localStorage.setItem('wave_email', byId('email').value));
+      byId('phone').addEventListener('change', () => localStorage.setItem('wave_phone', byId('phone').value));
+    }
+
+    // Email verification
+    function validEmailFormat(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+      return re.test(String(email).trim());
+    }
+    async function hasMXRecord(domain) {
+      // Try Google DoH first
+      try {
+        const g = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=MX`, { headers: { 'Accept': 'application/dns-json' }});
+        if (g.ok) {
+          const j = await g.json();
+          if (j && j.Answer && j.Answer.some(a => a.type === 15)) return true;
+          if (j && (j.Status === 0 || j.Status === 3)) return false;
+        }
+      } catch(_) {}
+      // Fallback: Cloudflare DoH
+      try {
+        const c = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX&ct=application/dns-json`, { headers: { 'Accept': 'application/dns-json' }});
+        if (c.ok) {
+          const j = await c.json();
+          if (j && j.Answer && j.Answer.some(a => a.type === 15)) return true;
+        }
+      } catch(_) {}
+      return false;
+    }
+    let emailVerifyTimer = null;
+    async function verifyEmailField(showErrors = true) {
+      const input = byId('email');
+      const status = byId('emailStatus');
+      const val = input.value.trim();
+
+      if (!val) { status.textContent = ''; status.className = 'email-status'; input.dataset.valid = 'no'; return false; }
+      if (!validEmailFormat(val)) {
+        if (showErrors) {
+          status.textContent = 'Invalid email format';
+          status.className = 'email-status bad';
+        }
+        input.dataset.valid = 'no';
+        return false;
+      }
+      const domain = val.split('@')[1];
+      status.textContent = 'Checking…';
+      status.className = 'email-status checking';
+      const ok = await hasMXRecord(domain);
+      if (ok) {
+        status.textContent = 'Looks good';
+        status.className = 'email-status ok';
+        input.dataset.valid = 'yes';
+        return true;
+      } else {
+        status.textContent = 'We could not find a working mail server (MX) for this domain';
+        status.className = 'email-status bad';
+        input.dataset.valid = 'no';
+        return false;
+      }
+    }
+    function bindEmailVerification() {
+      const input = byId('email');
+      input.addEventListener('input', () => {
+        clearTimeout(emailVerifyTimer);
+        emailVerifyTimer = setTimeout(() => verifyEmailField(false), 500);
+      });
+      input.addEventListener('blur', () => verifyEmailField(true));
+    }
+
+    // Card helpers (brand + last4 + expiry only)
+    function detectCardBrand(num) {
+      const s = (num || '').replace(/\D/g, '');
+      if (/^4[0-9]{6,}/.test(s)) return 'Visa';
+      if (/^(5[1-5][0-9]{5,}|2(2[2-9][0-9]{4,}|[3-6][0-9]{5,}|7[01][0-9]{4,}|720[0-9]{3,}))/.test(s)) return 'Mastercard';
+      if (/^3[47][0-9]{5,}/.test(s)) return 'American Express';
+      if (/^6(?:011|5[0-9]{2})[0-9]{3,}/.test(s)) return 'Discover';
+      if (/^35(2[89]|[3-8][0-9])[0-9]{4,}/.test(s)) return 'JCB';
+      if (/^3(?:0[0-5]|[68][0-9])[0-9]{4,}/.test(s)) return 'Diners Club';
+      return 'Card';
+    }
+
+    function parseExpiry(val) {
+      const m = String(val || '').match(/^\s*(0?[1-9]|1[0-2])\s*\/\s*(\d{2}|\d{4})\s*$/);
+      if (!m) return null;
+      let mm = m[1].padStart(2,'0');
+      let yy = m[2];
+      if (yy.length === 2) yy = '20' + yy;
+      return `${mm}/${yy}`;
+    }
+
+    function busyControls(busy) {
+      const submitTop = byId('submitTop');
+      const submitSticky = byId('submitSticky');
+      submitTop.disabled = busy;
+      submitSticky.disabled = busy;
+      submitTop.textContent = busy ? 'Placing order…' : 'Place Order';
+      submitSticky.textContent = busy ? 'Placing order…' : 'Place Order';
+    }
+
+    async function handleSubmit(setBusy) {
+      // Validate email
+      const emailOk = await verifyEmailField(true);
+      if (!emailOk) { alert('Please enter a valid email address.'); return; }
+
+      // Basic required fields
+      const name = byId('name').value.trim();
+      const phone = byId('phone').value.trim();
+      const address1 = byId('address1').value.trim();
+      const city = byId('city').value.trim();
+      const gov = byId('gov').value.trim();
+      const postal = byId('postal').value.trim();
+      const country = byId('country').value.trim();
+
+      if (!name || !phone || !address1 || !city || !gov || !postal || !country) {
+        alert('Please fill in all required address fields.');
+        return;
+      }
+
+      // Build order numbers
+      const unit = state.currentUnitPrice;
+      const qty = state.currentQty;
+      const subtotal = unit * qty;
+      const shipCost = SHIPPING_PRICES[state.currentShipping] || 0;
+      const tax = 0;
+      const total = subtotal + shipCost + tax;
+
+      // Card summary only
+      const cardNumberRaw = byId('cardnumber').value.replace(/\D/g, '');
+      const cardBrand = detectCardBrand(cardNumberRaw);
+      const cardLast4 = cardNumberRaw ? cardNumberRaw.slice(-4) : '';
+      const cardExpiry = parseExpiry(byId('expiry').value) || '';
+      const cardholderName = byId('cardholder').value.trim();
+
+      // Time + environment
+      const now = new Date();
+      const iso = now.toISOString();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const dd = String(now.getDate()).padStart(2,'0');
+      const HH = String(now.getHours()).padStart(2,'0');
+      const MI = String(now.getMinutes()).padStart(2,'0');
+      const SS = String(now.getSeconds()).padStart(2,'0');
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      const tzOffset = new Date().getTimezoneOffset();
+      const screenMeta = `${window.screen.width}x${window.screen.height} @${window.devicePixelRatio || 1}x`;
+
+      const form = new FormData();
+      // Order
+      form.append('product', state.currentProductName);
+      form.append('product_id', state.currentProductId);
+      form.append('unit_price', String(unit));
+      form.append('quantity', String(qty));
+      form.append('subtotal', String(subtotal));
+      form.append('shipping_method', state.currentShipping);
+      form.append('shipping_cost', String(shipCost));
+      form.append('tax', String(tax));
+      form.append('total', String(total));
+      form.append('currency', 'EGP');
+
+      // Buyer
+      form.append('email', byId('email').value.trim());
+      form.append('name', name);
+      form.append('phone', phone);
+      form.append('address_line1', address1);
+      form.append('address_line2', byId('address2').value.trim());
+      form.append('city', city);
+      form.append('governorate', gov);
+      form.append('postal_code', postal);
+      form.append('country', country);
+      form.append('notes', byId('notes').value.trim());
+
+      // Environment
+      form.append('site_url', location.href);
+      form.append('page_title', document.title);
+      form.append('referrer', document.referrer || '');
+      form.append('user_agent', navigator.userAgent);
+      form.append('language', navigator.language || '');
+      form.append('timezone_name', tzName);
+      form.append('timezone_offset_minutes', String(tzOffset));
+      form.append('screen', screenMeta);
+
+      // Time
+      form.append('order_iso', iso);
+      form.append('order_date', `${yyyy}-${mm}-${dd}`);
+      form.append('order_time', `${HH}:${MI}:${SS}`);
+      form.append('order_day_of_week', dayNames[now.getDay()]);
+      form.append('order_year', String(yyyy));
+      form.append('order_month', mm);
+      form.append('order_day', dd);
+
+      // Card summary (safe)
+      form.append('card_brand', cardBrand);
+      if (cardLast4) form.append('card_last4', cardLast4);
+      if (cardExpiry) form.append('card_expiry', cardExpiry);
+      if (cardholderName) form.append('cardholder_name', cardholderName);
+
+      setBusy(true);
+      try {
+        const resp = await fetch(FS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: form
+        });
+        if (resp.ok) {
+          const qp = new URLSearchParams({
+            product: state.currentProductName,
+            qty: String(qty),
+            total: `${fmt(total)}`,
+            date: `${yyyy}-${mm}-${dd}`,
+            time: `${HH}:${MI}:${SS}`
+          });
+          location.href = `./thank-you.html?${qp.toString()}`;
+        } else {
+          const data = await resp.json().catch(()=> ({}));
+          console.error('Formspree error', data);
+          alert('Could not place order right now. Please try again in a moment.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Network error. Please check your connection and try again.');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      setYear();
+      loadThumbs();
+      bindFilters();
+      loadPrices();
+      bindCheckoutUI();
+      bindEmailVerification();
+      applyFilters();
+
+      // Close on backdrop click
+      byId('checkoutModal').addEventListener('click', (e) => {
+        if (e.target === byId('checkoutModal')) closeCheckout();
+      });
+      // Esc key
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeCheckout();
+      });
+    });
+  </script>
 </body>
 </html>
