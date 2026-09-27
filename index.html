@@ -6,7 +6,7 @@
   <title>Wave Electronics — Used & Salvage Marketplace</title>
   <meta name="description" content="Wave Electronics — buy and sell used and damaged electronics in Egypt. Salvage parts, wearables, smartphones, and more." />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin >
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f172a;
@@ -106,6 +106,8 @@
       box-shadow: 0 8px 20px rgba(239,68,68,0.35);
     }
 
+    footer { color: var(--muted); font-size: 12px; padding: 36px 18px; text-align:center; }
+
     /* Modal */
     .modal-backdrop {
       position:fixed; inset:0; display:none; place-items: center; z-index: 50;
@@ -114,7 +116,7 @@
     .modal-backdrop.open { display:grid; }
     .modal {
       width: min(920px, 92vw); max-height: 88vh; overflow: hidden;
-      background: rgba(2,6,23,0.85);
+      background: rgba(2,6,23,0.92);
       border:1px solid rgba(148,163,184,0.12);
       border-radius: 16px; box-shadow: var(--shadow);
       display:grid; grid-template-rows: auto 1fr auto;
@@ -127,6 +129,7 @@
     }
     .modal-title { font-size: 16px; font-weight: 800; }
     .close { background: transparent; border:0; color: var(--muted); font-size: 22px; cursor:pointer; }
+
     .modal-content {
       padding:14px 16px; overflow:auto; display:grid; gap:14px;
       grid-template-columns: 1.15fr 1fr;
@@ -165,284 +168,373 @@
     .email-status.bad { color: var(--danger); }
     .email-status.checking { color: var(--accent); }
 
+    /* Sticky checkout bar (always visible at bottom of modal) */
     .sticky-bar {
-      position: sticky; bottom: 0; z-index: 5;
       display:flex; align-items:center; justify-content: space-between; gap:10px;
-      padding: 10px 12px; background: rgba(2,6,23,0.9);
+      padding: 10px 12px; background: rgba(2,6,23,0.98);
       border-top: 1px solid rgba(148,163,184,0.12);
       box-shadow: 0 -10px 20px rgba(0,0,0,0.25);
     }
     .sticky-total { font-weight: 800; font-size: 16px; }
     .btn-big {
-      padding: 12px 16px; font-size: 16px; border-radius: 12px; font-weight: 800;
+      padding: 12px 18px; font-size: 16px; border-radius: 12px; font-weight: 800;
       background: linear-gradient(180deg, rgba(34,211,238,0.22), rgba(16,185,129,0.18));
       border: 1px solid rgba(34,211,238,0.38); color: #eaffff; cursor:pointer;
     }
     .btn-big:disabled { opacity: .5; cursor: not-allowed; }
 
-    footer { color: var(--muted); font-size: 12px; padding: 36px 18px; text-align:center; }
-    .hint { color: var(--muted); font-size: 12px; }
+    /* Thank you section */
+    .wrap{max-width:860px;margin:0 auto;padding:28px 16px;display:grid;gap:16px}
+    .panel-t{background:rgba(11,16,32,0.55);border:1px solid rgba(148,163,184,0.12);border-radius:14px;padding:18px;display:grid;gap:10px}
+    h1{font-size:28px;margin:0}
+    .muted{color:var(--muted)}
+    .row-t{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+    .ref{font-weight:800;color:#a7f3d0}
+    .btn-t{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid rgba(148,163,184,0.14);background:linear-gradient(180deg,rgba(34,211,238,0.14),rgba(16,185,129,0.10));color:#e6fbff;font-weight:800;cursor:pointer}
+    .grid-t{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:700px){.grid-t{grid-template-columns:1fr}}
+    .kv{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(148,163,184,0.18);padding:6px 0}
+    .total{font-size:18px;font-weight:800;border-top:1px dashed rgba(148,163,184,0.18);padding-top:8px;margin-top:2px}
+    .center{text-align:center}
+    [hidden]{display:none !important}
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="brand">
-        <div class="logo">W</div>
-        <div>
-          <div class="title">Wave Electronics</div>
-          <div class="subtitle">Used, salvage, and parts — Egypt</div>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="#9fb1c0" stroke-width="1.6" stroke-linecap="round" /></svg>
-          <input id="searchInput" placeholder="Search products, e.g. 'Huawei', 'Remote', 'Damaged screen'">
-        </div>
-        <div class="chipbar" id="filters">
-          <div class="chip active" data-filter="all">All</div>
-          <div class="chip" data-filter="smartphones">Smartphones</div>
-          <div class="chip" data-filter="wearables">⌚ Wearables</div>
-          <div class="chip" data-filter="damaged">Damaged Screens</div>
-          <div class="chip" data-filter="working">Working Condition</div>
-          <div class="chip" data-filter="deals">Deals</div>
-        </div>
-      </div>
-    </div>
-  </header>
 
-  <main class="container">
-    <div class="grid" id="productGrid">
-
-      <div class="card" data-product-id="zflip5_damaged" data-name="Samsung Galaxy Z Flip 5" data-tags="samsung z flip 5 zflip5 damaged screen foldable smartphone phone" data-cats="smartphones damaged" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Z+Flip+5+%E2%80%94+Damaged+Screen">
-        <img class="thumb" alt="Samsung Galaxy Z Flip 5 — damaged screen" />
-        <div class="card-body">
-          <div class="name">Samsung Galaxy Z Flip 5</div>
-          <div class="meta">Damaged screen — Foldable</div>
-          <div class="price-row">
-            <div class="price" data-price>-</div>
-            <button class="btn buy-btn">Buy Now</button>
-          </div>
-          <div class="badges">
-            <div class="badge">Smartphones</div>
-            <div class="badge">Damaged screen</div>
-          </div>
-          <div class="source" data-price-source></div>
-        </div>
-      </div>
-
-      <div class="card" data-product-id="p30lite_working" data-name="Huawei P30 Lite" data-tags="huawei p30 lite working used smartphone phone" data-cats="smartphones working deals" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+P30+Lite+%E2%80%94+Used">
-        <img class="thumb" alt="Huawei P30 Lite — working screen (used)" />
-        <div class="card-body">
-          <div class="name">Huawei P30 Lite</div>
-          <div class="meta">Working screen — Used</div>
-          <div class="price-row">
-            <div class="price" data-price>-</div>
-            <button class="btn buy-btn">Buy Now</button>
-          </div>
-          <div class="badges">
-            <div class="badge">Smartphones</div>
-            <div class="badge">Working</div>
-            <div class="badge">Deal</div>
-          </div>
-          <div class="source" data-price-source></div>
-        </div>
-      </div>
-
-      <div class="card" data-product-id="receiver_remote" data-name="Receiver Remote" data-tags="receiver remote tv stb set top box ir universal" data-cats="deals working" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Receiver+Remote">
-        <img class="thumb" alt="Receiver Remote control" />
-        <div class="card-body">
-          <div class="name">Receiver Remote</div>
-          <div class="meta">Generic IR remote</div>
-          <div class="price-row">
-            <div class="price" data-price>-</div>
-            <button class="btn buy-btn">Buy Now</button>
-          </div>
-          <div class="badges">
-            <div class="badge">Deal</div>
-          </div>
-          <div class="source" data-price-source></div>
-        </div>
-      </div>
-
-      <div class="card" data-product-id="huawei_watch_batt" data-name="Huawei Watch (Battery Not Working)" data-tags="huawei watch wearable battery not working smartwatch" data-cats="wearables damaged" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+Watch+%E2%80%94+Battery+Issue">
-        <img class="thumb" alt="Huawei Watch — battery not working" />
-        <div class="card-body">
-          <div class="name">Huawei Watch (Battery Not Working)</div>
-          <div class="meta">For parts or repair</div>
-          <div class="price-row">
-            <div class="price" data-price>-</div>
-            <button class="btn buy-btn">Buy Now</button>
-          </div>
-          <div class="badges">
-            <div class="badge">⌚ Wearables</div>
-            <div class="badge">Not working</div>
-          </div>
-          <div class="source" data-price-source></div>
-        </div>
-      </div>
-
-      <div class="card" data-product-id="vibration_motors" data-name="Vibration Motors" data-tags="vibration motor dc 3v salvage parts tiny" data-cats="deals working" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Vibration+Motors">
-        <img class="thumb" alt="Small vibration motors" />
-        <div class="card-body">
-          <div class="name">Vibration Motors</div>
-          <div class="meta">Small DC motors (salvaged)</div>
-          <div class="price-row">
-            <div class="price" data-price>-</div>
-            <button class="btn buy-btn">Buy Now</button>
-          </div>
-          <div class="badges">
-            <div class="badge">Deal</div>
-          </div>
-          <div class="source" data-price-source></div>
-        </div>
-      </div>
-
-    </div>
-
-    <p class="hint">Prices load from prices.json at the repository root and can be edited anytime. Sources are shown per item.</p>
-  </main>
-
-  <!-- Checkout Modal -->
-  <div class="modal-backdrop" id="checkoutModal">
-    <div class="modal">
-      <div class="modal-titlebar">
-        <div class="modal-title">Checkout</div>
-        <button class="close" id="closeModal" aria-label="Close">×</button>
-      </div>
-
-      <div class="modal-content">
-        <!-- Left: Order configuration and summary -->
-        <div class="panel" id="orderPanel">
-          <div class="section-title">Order</div>
-
-          <div class="row">
-            <div>
-              <div id="coProductName" style="font-weight:800;"></div>
-              <div class="source" id="coPriceSource"></div>
-            </div>
-            <img id="coThumb" alt="" style="width:84px; height:64px; object-fit:cover; border-radius:10px; border:1px solid rgba(148,163,184,0.12);" />
-          </div>
-
-          <div class="row qty">
-            <label for="coQty">Quantity</label>
-            <input id="coQty" type="number" min="1" value="1">
-          </div>
-
-          <div class="ship-options">
-            <div class="section-title">Shipping</div>
-            <label class="ship-option">
-              <input type="radio" name="shipping" value="standard" checked>
-              <div>Standard (50 EGP) — 2-4 days</div>
-            </label>
-            <label class="ship-option">
-              <input type="radio" name="shipping" value="express">
-              <div>Express (120 EGP) — 1-2 days</div>
-            </label>
-            <label class="ship-option">
-              <input type="radio" name="shipping" value="pickup">
-              <div>Pickup (0 EGP) — Cairo</div>
-            </label>
-          </div>
-
-          <div class="summary">
-            <div class="line"><span>Unit price</span><span id="coUnit">-</span></div>
-            <div class="line"><span>Quantity</span><span id="coQtyEcho">1</span></div>
-            <div class="line"><span>Subtotal</span><span id="coSubtotal">-</span></div>
-            <div class="line"><span>Shipping</span><span id="coShipping">-</span></div>
-            <div class="line"><span>Tax (0%)</span><span id="coTax">0 EGP</span></div>
-            <div class="line total"><span>Total</span><span id="coTotal">-</span></div>
-          </div>
-        </div>
-
-        <!-- Right: Buyer + Payment -->
-        <form class="panel" id="checkoutForm">
-          <div class="section-title">Buyer details</div>
-          <div class="form-grid">
-            <div>
-              <label for="email">Email</label>
-              <input id="email" type="email" placeholder="you@example.com" required>
-              <div id="emailStatus" class="email-status"></div>
-            </div>
-            <div>
-              <label for="name">Full name</label>
-              <input id="name" name="name" type="text" placeholder="Full legal name" required>
-            </div>
-            <div>
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" placeholder="+20..." required>
-            </div>
-            <div>
-              <label for="country">Country</label>
-              <input id="country" name="country" type="text" value="Egypt" required>
-            </div>
-          </div>
-
-          <div class="section-title">Address</div>
-          <div class="form-grid">
-            <div>
-              <label for="address1">Address line 1</label>
-              <input id="address1" name="address_line1" type="text" placeholder="Street, building" required>
-            </div>
-            <div>
-              <label for="address2">Address line 2</label>
-              <input id="address2" name="address_line2" type="text" placeholder="Apartment, floor (optional)">
-            </div>
-            <div>
-              <label for="city">City</label>
-              <input id="city" name="city" type="text" placeholder="City" required>
-            </div>
-            <div>
-              <label for="gov">Governorate</label>
-              <input id="gov" name="governorate" type="text" placeholder="Governorate" required>
-            </div>
-            <div>
-              <label for="postal">Postal code</label>
-              <input id="postal" name="postal_code" type="text" placeholder="Postal code" required>
-            </div>
-            <div>
-              <label for="notes">Order notes</label>
-              <input id="notes" name="notes" type="text" placeholder="Notes for delivery (optional)">
-            </div>
-          </div>
-
-          <div class="section-title">Card (not charged online)</div>
-          <div class="form-grid">
-            <div>
-              <label for="cardholder">Cardholder name</label>
-              <input id="cardholder" type="text" autocomplete="cc-name" placeholder="As shown on card">
-            </div>
-            <div>
-              <label for="cardnumber">Card number</label>
-              <input id="cardnumber" type="password" inputmode="numeric" autocomplete="cc-number" placeholder="•••• •••• •••• ••••">
-            </div>
-            <div>
-              <label for="expiry">Expiry (MM/YY)</label>
-              <input id="expiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY">
-            </div>
-            <div>
-              <label for="cvv">CVV</label>
-              <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV">
-            </div>
-          </div>
-
+  <!-- STORE VIEW -->
+  <section id="storeView">
+    <header>
+      <div class="container">
+        <div class="brand">
+          <div class="logo">W</div>
           <div>
-            <button type="submit" class="btn" id="submitTop">Place Order</button>
-            <div class="hint">We email you the order details. Only card brand, last 4, and expiry are included for reference — never the full number or CVV.</div>
+            <div class="title">Wave Electronics</div>
+            <div class="subtitle">Used, salvage, and parts — Egypt</div>
           </div>
-        </form>
+        </div>
+        <div class="toolbar">
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="#9fb1c0" stroke-width="1.6" stroke-linecap="round" /></svg>
+            <input id="searchInput" placeholder="Search products, e.g. 'Huawei', 'Remote', 'Damaged screen'">
+          </div>
+          <div class="chipbar" id="filters">
+            <div class="chip active" data-filter="all">All</div>
+            <div class="chip" data-filter="smartphones">Smartphones</div>
+            <div class="chip" data-filter="wearables">⌚ Wearables</div>
+            <div class="chip" data-filter="damaged">Damaged Screens</div>
+            <div class="chip" data-filter="working">Working Condition</div>
+            <div class="chip" data-filter="deals">Deals</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="grid" id="productGrid">
+
+        <div class="card" data-product-id="zflip5_damaged" data-name="Samsung Galaxy Z Flip 5" data-tags="samsung z flip 5 zflip5 damaged screen foldable smartphone phone" data-cats="smartphones damaged" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Z+Flip+5+%E2%80%94+Damaged+Screen">
+          <img class="thumb" alt="Samsung Galaxy Z Flip 5 — damaged screen" />
+          <div class="card-body">
+            <div class="name">Samsung Galaxy Z Flip 5</div>
+            <div class="meta">Damaged screen — Foldable</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Smartphones</div>
+              <div class="badge">Damaged screen</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <div class="card" data-product-id="p30lite_working" data-name="Huawei P30 Lite" data-tags="huawei p30 lite working used smartphone phone" data-cats="smartphones working deals" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+P30+Lite+%E2%80%94+Used">
+          <img class="thumb" alt="Huawei P30 Lite — working screen (used)" />
+          <div class="card-body">
+            <div class="name">Huawei P30 Lite</div>
+            <div class="meta">Working screen — Used</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Smartphones</div>
+              <div class="badge">Working</div>
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <div class="card" data-product-id="receiver_remote" data-name="Receiver Remote" data-tags="receiver remote tv stb set top box ir universal" data-cats="deals working" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Receiver+Remote">
+          <img class="thumb" alt="Receiver Remote control" />
+          <div class="card-body">
+            <div class="name">Receiver Remote</div>
+            <div class="meta">Generic IR remote</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <div class="card" data-product-id="huawei_watch_batt" data-name="Huawei Watch (Battery Not Working)" data-tags="huawei watch wearable battery not working smartwatch" data-cats="wearables damaged" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+Watch+%E2%80%94+Battery+Issue">
+          <img class="thumb" alt="Huawei Watch — battery not working" />
+          <div class="card-body">
+            <div class="name">Huawei Watch (Battery Not Working)</div>
+            <div class="meta">For parts or repair</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">⌚ Wearables</div>
+              <div class="badge">Not working</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <div class="card" data-product-id="vibration_motors" data-name="Vibration Motors" data-tags="vibration motor dc 3v salvage parts tiny" data-cats="deals working" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Vibration+Motors">
+          <img class="thumb" alt="Small vibration motors" />
+          <div class="card-body">
+            <div class="name">Vibration Motors</div>
+            <div class="meta">Small DC motors (salvaged)</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
       </div>
 
-      <div class="sticky-bar">
-        <div class="sticky-total" id="stickyTotal">Total: -</div>
-        <button class="btn-big" id="submitSticky">Place Order</button>
+      <p class="hint" style="color:#94a3b8;font-size:12px;">Prices are embedded below (editable JSON section) so you only need this one file.</p>
+    </main>
+
+    <!-- Checkout Modal -->
+    <div class="modal-backdrop" id="checkoutModal">
+      <div class="modal">
+        <div class="modal-titlebar">
+          <div class="modal-title">Checkout</div>
+          <button class="close" id="closeModal" aria-label="Close">×</button>
+        </div>
+
+        <div class="modal-content">
+          <!-- Left: Order configuration and summary -->
+          <div class="panel" id="orderPanel">
+            <div class="section-title">Order</div>
+
+            <div class="row">
+              <div>
+                <div id="coProductName" style="font-weight:800;"></div>
+                <div class="source" id="coPriceSource"></div>
+              </div>
+              <img id="coThumb" alt="" style="width:84px; height:64px; object-fit:cover; border-radius:10px; border:1px solid rgba(148,163,184,0.12);" />
+            </div>
+
+            <div class="row qty">
+              <label for="coQty">Quantity</label>
+              <input id="coQty" type="number" min="1" value="1">
+            </div>
+
+            <div class="ship-options">
+              <div class="section-title">Shipping</div>
+              <label class="ship-option">
+                <input type="radio" name="shipping" value="standard" checked>
+                <div>Standard (50 EGP) — 2-4 days</div>
+              </label>
+              <label class="ship-option">
+                <input type="radio" name="shipping" value="express">
+                <div>Express (120 EGP) — 1-2 days</div>
+              </label>
+              <label class="ship-option">
+                <input type="radio" name="shipping" value="pickup">
+                <div>Pickup (0 EGP) — Cairo</div>
+              </label>
+            </div>
+
+            <div class="summary">
+              <div class="line"><span>Unit price</span><span id="coUnit">-</span></div>
+              <div class="line"><span>Quantity</span><span id="coQtyEcho">1</span></div>
+              <div class="line"><span>Subtotal</span><span id="coSubtotal">-</span></div>
+              <div class="line"><span>Shipping</span><span id="coShipping">-</span></div>
+              <div class="line"><span>Tax (0%)</span><span id="coTax">0 EGP</span></div>
+              <div class="line total"><span>Total</span><span id="coTotal">-</span></div>
+            </div>
+          </div>
+
+          <!-- Right: Buyer + Payment -->
+          <form class="panel" id="checkoutForm">
+            <div class="section-title">Buyer details</div>
+            <div class="form-grid">
+              <div>
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" required>
+                <div id="emailStatus" class="email-status"></div>
+              </div>
+              <div>
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" placeholder="Full legal name" required>
+              </div>
+              <div>
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" placeholder="+20..." required>
+              </div>
+              <div>
+                <label for="country">Country</label>
+                <input id="country" name="country" type="text" value="Egypt" required>
+              </div>
+            </div>
+
+            <div class="section-title">Address</div>
+            <div class="form-grid">
+              <div>
+                <label for="address1">Address line 1</label>
+                <input id="address1" name="address_line1" type="text" placeholder="Street, building" required>
+              </div>
+              <div>
+                <label for="address2">Address line 2</label>
+                <input id="address2" name="address_line2" type="text" placeholder="Apartment, floor (optional)">
+              </div>
+              <div>
+                <label for="city">City</label>
+                <input id="city" name="city" type="text" placeholder="City" required>
+              </div>
+              <div>
+                <label for="gov">Governorate</label>
+                <input id="gov" name="governorate" type="text" placeholder="Governorate" required>
+              </div>
+              <div>
+                <label for="postal">Postal code</label>
+                <input id="postal" name="postal_code" type="text" placeholder="Postal code" required>
+              </div>
+              <div>
+                <label for="notes">Order notes</label>
+                <input id="notes" name="notes" type="text" placeholder="Notes for delivery (optional)">
+              </div>
+            </div>
+
+            <div class="section-title">Card (not charged online)</div>
+            <div class="form-grid">
+              <div>
+                <label for="cardholder">Cardholder name</label>
+                <input id="cardholder" type="text" autocomplete="cc-name" placeholder="As shown on card">
+              </div>
+              <div>
+                <label for="cardnumber">Card number</label>
+                <input id="cardnumber" type="password" inputmode="numeric" autocomplete="cc-number" placeholder="•••• •••• •••• ••••">
+              </div>
+              <div>
+                <label for="expiry">Expiry (MM/YY)</label>
+                <input id="expiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY">
+              </div>
+              <div>
+                <label for="cvv">CVV</label>
+                <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV">
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="btn" id="submitTop">Place Order</button>
+              <div class="hint" style="color:#94a3b8;font-size:12px;">We email you the order details. Only card brand, last 4, and expiry are included — never the full number or CVV.</div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Big sticky purchase bar -->
+        <div class="sticky-bar">
+          <div class="sticky-total" id="stickyTotal">Total: -</div>
+          <button class="btn-big" id="submitSticky">Place Order</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <footer>
-    © <span id="year"></span> Wave Electronics • Questions? <a href="mailto:adamsalem815@gmail.com">Email support</a>
-  </footer>
+    <footer>
+      © <span id="year"></span> Wave Electronics • Questions? <a href="mailto:adamsalem815@gmail.com">Email support</a>
+    </footer>
+  </section>
+
+  <!-- THANK YOU VIEW (same file) -->
+  <section id="thankyouView" hidden>
+    <div class="wrap">
+      <div class="panel-t">
+        <div class="row-t">
+          <h1>Thank you for your order! 🎉</h1>
+          <button class="btn-t" onclick="window.print()">🖨️ Print</button>
+        </div>
+        <div class="muted">We’ve received your details and emailed a confirmation. We’ll contact you soon to arrange delivery/pickup.</div>
+        <div>Order ref: <span id="ref" class="ref"></span></div>
+      </div>
+
+      <div class="panel-t">
+        <div style="font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#9fb9c8">Order summary</div>
+        <div class="grid-t">
+          <div class="kv"><span>Product</span><span id="p"></span></div>
+          <div class="kv"><span>Quantity</span><span id="q"></span></div>
+          <div class="kv"><span>Date</span><span id="d"></span></div>
+          <div class="kv"><span>Time</span><span id="t"></span></div>
+          <div class="kv total"><span>Total</span><span id="tot"></span></div>
+        </div>
+      </div>
+
+      <div class="panel-t center">
+        Need help? <a href="mailto:adamsalem815@gmail.com">Contact Support</a> • <a href="#" id="backHome">Back to home</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Embedded prices (edit here; single-file) -->
+  <script type="application/json" id="pricesData">
+  {
+    "updated_at": "2026-09-26T10:00:00Z",
+    "currency": "EGP",
+    "items": {
+      "zflip5_damaged": {
+        "price": 13000,
+        "available": false,
+        "notes": "Damaged screen — SOLD OUT",
+        "source": "Seller listing (edit as needed)"
+      },
+      "p30lite_working": {
+        "price": 4500,
+        "available": true,
+        "notes": "Used — working screen",
+        "source": "Market avg (Dubizzle EG — update link if you have one)"
+      },
+      "receiver_remote": {
+        "price": 15,
+        "available": true,
+        "notes": "Generic IR remote",
+        "source": "Local market"
+      },
+      "huawei_watch_batt": {
+        "price": 800,
+        "available": true,
+        "notes": "Battery not holding charge; sold as-is",
+        "source": "Estimate — update when confirmed"
+      },
+      "vibration_motors": {
+        "price": 35,
+        "available": true,
+        "notes": "Mini 3V DC motors (salvaged)",
+        "source": "Estimate — update when confirmed"
+      }
+    }
+  }
+  </script>
+
+  <!-- Confetti (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <script>
     // Config
@@ -468,7 +560,7 @@
     const qsa = (sel, el=document) => Array.from(el.querySelectorAll(sel));
     const fmt = (n) => new Intl.NumberFormat('en-EG', { style:'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(n).replace('EGP', 'EGP').trim();
 
-    function setYear() { byId('year').textContent = new Date().getFullYear(); }
+    function setYear() { const y = byId('year'); if (y) y.textContent = new Date().getFullYear(); }
 
     function loadThumbs() {
       qsa('.card').forEach(card => {
@@ -501,16 +593,31 @@
       byId('searchInput').addEventListener('input', applyFilters);
     }
 
+    function getEmbeddedPrices() {
+      try {
+        const el = byId('pricesData');
+        if (!el) return null;
+        const j = JSON.parse(el.textContent);
+        return j.items || j;
+      } catch (e) {
+        console.warn('Failed to parse embedded prices JSON', e);
+        return null;
+      }
+    }
+
     async function loadPrices() {
+      const embedded = getEmbeddedPrices();
+      if (embedded) {
+        state.prices = embedded;
+        updateUIWithPrices();
+        return;
+      }
+      // Fallback if embedded not present: try to fetch (not needed in single-file, but kept)
       try {
         const res = await fetch('./prices.json', { cache: 'no-store' });
-        if (!res.ok) throw new Error('prices.json not found');
         const data = await res.json();
         state.prices = data.items || data;
-        updateUIWithPrices();
       } catch (e) {
-        console.warn('Failed to load prices.json', e);
-        // Fallback: embed minimal defaults
         state.prices = {
           zflip5_damaged: { price: 13000, available: false, notes: 'SOLD OUT', source: 'Manual' },
           p30lite_working: { price: 4500, available: true, notes: 'Used — working screen', source: 'Manual' },
@@ -518,8 +625,8 @@
           huawei_watch_batt: { price: 800, available: true, notes: 'Battery not working', source: 'Manual' },
           vibration_motors: { price: 35, available: true, notes: 'Mini DC motors', source: 'Manual' },
         };
-        updateUIWithPrices();
       }
+      updateUIWithPrices();
     }
 
     function updateUIWithPrices() {
@@ -554,7 +661,6 @@
           btn.disabled = true;
         }
 
-        // Bind buy button
         btn?.addEventListener('click', () => openCheckout(card));
       });
       applyFilters();
@@ -586,7 +692,7 @@
       // Open modal
       byId('checkoutModal').classList.add('open');
 
-      // Pre-fill name if present from previous
+      // Pre-fill from localStorage
       const nameVal = localStorage.getItem('wave_name');
       if (nameVal) byId('name').value = nameVal;
       const emailVal = localStorage.getItem('wave_email');
@@ -626,7 +732,6 @@
       byId('coQty').addEventListener('input', () => { if (byId('coQty').value < 1) byId('coQty').value = 1; refreshSummary(); });
       qsa('input[name="shipping"]').forEach(r => r.addEventListener('change', refreshSummary));
 
-      // Sync both submit buttons
       const form = byId('checkoutForm');
       const submitTop = byId('submitTop');
       const submitSticky = byId('submitSticky');
@@ -636,22 +741,22 @@
         submitTop.textContent = busy ? 'Placing order…' : 'Place Order';
         submitSticky.textContent = busy ? 'Placing order…' : 'Place Order';
       };
-      // Intercept submits
+
       form.addEventListener('submit', (e) => { e.preventDefault(); handleSubmit(setBusy); });
       submitSticky.addEventListener('click', (e) => { e.preventDefault(); form.requestSubmit(); });
+
       // Save local fields
       byId('name').addEventListener('change', () => localStorage.setItem('wave_name', byId('name').value));
       byId('email').addEventListener('change', () => localStorage.setItem('wave_email', byId('email').value));
       byId('phone').addEventListener('change', () => localStorage.setItem('wave_phone', byId('phone').value));
     }
 
-    // Email verification
+    // Email verification (syntax + MX check via DoH)
     function validEmailFormat(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
       return re.test(String(email).trim());
     }
     async function hasMXRecord(domain) {
-      // Try Google DoH first
       try {
         const g = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=MX`, { headers: { 'Accept': 'application/dns-json' }});
         if (g.ok) {
@@ -660,7 +765,6 @@
           if (j && (j.Status === 0 || j.Status === 3)) return false;
         }
       } catch(_) {}
-      // Fallback: Cloudflare DoH
       try {
         const c = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX&ct=application/dns-json`, { headers: { 'Accept': 'application/dns-json' }});
         if (c.ok) {
@@ -676,14 +780,10 @@
       const status = byId('emailStatus');
       const val = input.value.trim();
 
-      if (!val) { status.textContent = ''; status.className = 'email-status'; input.dataset.valid = 'no'; return false; }
+      if (!val) { status.textContent=''; status.className='email-status'; input.dataset.valid='no'; return false; }
       if (!validEmailFormat(val)) {
-        if (showErrors) {
-          status.textContent = 'Invalid email format';
-          status.className = 'email-status bad';
-        }
-        input.dataset.valid = 'no';
-        return false;
+        if (showErrors) { status.textContent = 'Invalid email format'; status.className='email-status bad'; }
+        input.dataset.valid='no'; return false;
       }
       const domain = val.split('@')[1];
       status.textContent = 'Checking…';
@@ -692,12 +792,12 @@
       if (ok) {
         status.textContent = 'Looks good';
         status.className = 'email-status ok';
-        input.dataset.valid = 'yes';
+        input.dataset.valid='yes';
         return true;
       } else {
         status.textContent = 'We could not find a working mail server (MX) for this domain';
         status.className = 'email-status bad';
-        input.dataset.valid = 'no';
+        input.dataset.valid='no';
         return false;
       }
     }
@@ -721,7 +821,6 @@
       if (/^3(?:0[0-5]|[68][0-9])[0-9]{4,}/.test(s)) return 'Diners Club';
       return 'Card';
     }
-
     function parseExpiry(val) {
       const m = String(val || '').match(/^\s*(0?[1-9]|1[0-2])\s*\/\s*(\d{2}|\d{4})\s*$/);
       if (!m) return null;
@@ -731,21 +830,11 @@
       return `${mm}/${yy}`;
     }
 
-    function busyControls(busy) {
-      const submitTop = byId('submitTop');
-      const submitSticky = byId('submitSticky');
-      submitTop.disabled = busy;
-      submitSticky.disabled = busy;
-      submitTop.textContent = busy ? 'Placing order…' : 'Place Order';
-      submitSticky.textContent = busy ? 'Placing order…' : 'Place Order';
-    }
-
     async function handleSubmit(setBusy) {
-      // Validate email
       const emailOk = await verifyEmailField(true);
       if (!emailOk) { alert('Please enter a valid email address.'); return; }
 
-      // Basic required fields
+      // Required buyer fields
       const name = byId('name').value.trim();
       const phone = byId('phone').value.trim();
       const address1 = byId('address1').value.trim();
@@ -753,13 +842,12 @@
       const gov = byId('gov').value.trim();
       const postal = byId('postal').value.trim();
       const country = byId('country').value.trim();
-
       if (!name || !phone || !address1 || !city || !gov || !postal || !country) {
         alert('Please fill in all required address fields.');
         return;
       }
 
-      // Build order numbers
+      // Order numbers
       const unit = state.currentUnitPrice;
       const qty = state.currentQty;
       const subtotal = unit * qty;
@@ -767,7 +855,7 @@
       const tax = 0;
       const total = subtotal + shipCost + tax;
 
-      // Card summary only
+      // Card summary only (safe)
       const cardNumberRaw = byId('cardnumber').value.replace(/\D/g, '');
       const cardBrand = detectCardBrand(cardNumberRaw);
       const cardLast4 = cardNumberRaw ? cardNumberRaw.slice(-4) : '';
@@ -823,7 +911,7 @@
       form.append('timezone_offset_minutes', String(tzOffset));
       form.append('screen', screenMeta);
 
-      // Time
+      // Time fields
       form.append('order_iso', iso);
       form.append('order_date', `${yyyy}-${mm}-${dd}`);
       form.append('order_time', `${HH}:${MI}:${SS}`);
@@ -846,14 +934,9 @@
           body: form
         });
         if (resp.ok) {
-          const qp = new URLSearchParams({
-            product: state.currentProductName,
-            qty: String(qty),
-            total: `${fmt(total)}`,
-            date: `${yyyy}-${mm}-${dd}`,
-            time: `${HH}:${MI}:${SS}`
-          });
-          location.href = `./thank-you.html?${qp.toString()}`;
+          // Show Thank You view in the same file
+          const qp = { product: state.currentProductName, qty: String(qty), total: `${fmt(total)}`, date: `${yyyy}-${mm}-${dd}`, time: `${HH}:${MI}:${SS}` };
+          showThankYou(qp, true);
         } else {
           const data = await resp.json().catch(()=> ({}));
           console.error('Formspree error', data);
@@ -867,6 +950,64 @@
       }
     }
 
+    // Thank You logic (same file)
+    function showThankYou({product, qty, total, date, time}, push = false) {
+      // Fill fields
+      byId('p').textContent = product || '—';
+      byId('q').textContent = qty || '—';
+      byId('d').textContent = date || '—';
+      byId('t').textContent = time || '—';
+      byId('tot').textContent = total || '—';
+
+      // Generate and store ref
+      const ref = genRef();
+      sessionStorage.setItem('wave_ref', ref);
+      byId('ref').textContent = ref;
+
+      // Toggle views
+      byId('storeView').hidden = true;
+      byId('thankyouView').hidden = false;
+      closeCheckout();
+
+      // Optional history update for shareable URL
+      if (push) {
+        const sp = new URLSearchParams({ thankyou: '1', product, qty, total, date, time });
+        history.pushState({}, '', `?${sp.toString()}`);
+      }
+
+      // Confetti
+      try {
+        const duration = 1800;
+        const end = Date.now() + duration;
+        (function frame() {
+          window.confetti && confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
+          window.confetti && confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+        window.confetti && confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+      } catch(e){}
+    }
+
+    function maybeShowThankYouFromURL() {
+      const url = new URL(location.href);
+      const p = url.searchParams;
+      if (p.get('thankyou') === '1') {
+        showThankYou({
+          product: p.get('product') || '—',
+          qty: p.get('qty') || '—',
+          total: p.get('total') || '—',
+          date: p.get('date') || '—',
+          time: p.get('time') || '—'
+        }, false);
+      }
+    }
+
+    function genRef() {
+      const t = Date.now().toString(36).toUpperCase();
+      const r = Math.random().toString(36).slice(2,6).toUpperCase();
+      return `WAVE-${t}-${r}`;
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', () => {
       setYear();
@@ -877,7 +1018,7 @@
       bindEmailVerification();
       applyFilters();
 
-      // Close on backdrop click
+      // Modal close on backdrop click
       byId('checkoutModal').addEventListener('click', (e) => {
         if (e.target === byId('checkoutModal')) closeCheckout();
       });
@@ -885,6 +1026,18 @@
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeCheckout();
       });
+
+      // Back to store from Thank You
+      const back = byId('backHome');
+      if (back) back.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.pushState({}, '', location.pathname);
+        byId('thankyouView').hidden = true;
+        byId('storeView').hidden = false;
+      });
+
+      // If URL already has thankyou=1, show it
+      maybeShowThankYouFromURL();
     });
   </script>
 </body>
