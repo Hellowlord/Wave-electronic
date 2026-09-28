@@ -316,6 +316,63 @@
           </div>
         </div>
 
+        <!-- Casio Pro FX-1 -->
+        <div class="card" data-product-id="casio_pro_fx1" data-name="Casio Pro FX-1" data-tags="casio pro fx-1 calculator vintage fx1 fx" data-cats="deals working" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Casio+Pro+FX-1">
+          <img class="thumb" alt="Casio Pro FX-1 calculator" />
+          <div class="card-body">
+            <div class="name">Casio Pro FX-1</div>
+            <div class="meta">Scientific calculator — Working</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Working</div>
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <!-- 2 sticks of ddr2 512 mb -->
+        <div class="card" data-product-id="ddr2_2x512mb" data-name="2 sticks of ddr2 512 mb"
+             data-tags="ddr2 512mb 512 mb ram memory 2x512mb pair"
+             data-cats="deals working" data-default-qty="1"
+             data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=2+sticks+of+DDR2+512MB">
+          <img class="thumb" alt="2 sticks of ddr2 512 mb" />
+          <div class="card-body">
+            <div class="name">2 sticks of ddr2 512 mb</div>
+            <div class="meta">Two sticks — Working</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Working</div>
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
+        <!-- USB Flash Drive 32GB -->
+        <div class="card" data-product-id="usb_32gb" data-name="USB Flash Drive — 32GB" data-tags="usb flash drive 32gb storage stick" data-cats="deals working" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=USB+Drive+32GB">
+          <img class="thumb" alt="USB Flash Drive — 32GB" />
+          <div class="card-body">
+            <div class="name">USB Flash Drive — 32GB</div>
+            <div class="meta">USB storage — Working</div>
+            <div class="price-row">
+              <div class="price" data-price>-</div>
+              <button class="btn buy-btn">Buy Now</button>
+            </div>
+            <div class="badges">
+              <div class="badge">Working</div>
+              <div class="badge">Deal</div>
+            </div>
+            <div class="source" data-price-source></div>
+          </div>
+        </div>
+
       </div>
 
       <p class="hint" style="color:#94a3b8;font-size:12px;">Prices are embedded below (editable JSON section) so you only need this one file.</p>
@@ -528,6 +585,24 @@
         "available": true,
         "notes": "Mini 3V DC motors (salvaged)",
         "source": "Estimate — update when confirmed"
+      },
+      "casio_pro_fx1": {
+        "price": 14650,
+        "available": true,
+        "notes": "Scientific calculator — working",
+        "source": "User-specified"
+      },
+      "ddr2_2x512mb": {
+        "price": 1000,
+        "available": true,
+        "notes": "Two sticks — working",
+        "source": "User-specified"
+      },
+      "usb_32gb": {
+        "price": 3490,
+        "available": true,
+        "notes": "USB flash drive 32GB",
+        "source": "User-specified"
       }
     }
   }
@@ -612,7 +687,7 @@
         updateUIWithPrices();
         return;
       }
-      // Fallback if embedded not present: try to fetch (not needed in single-file, but kept)
+      // Fallback if embedded not present (not expected in single-file)
       try {
         const res = await fetch('./prices.json', { cache: 'no-store' });
         const data = await res.json();
@@ -624,6 +699,9 @@
           receiver_remote: { price: 15, available: true, notes: 'Generic remote', source: 'Manual' },
           huawei_watch_batt: { price: 800, available: true, notes: 'Battery not working', source: 'Manual' },
           vibration_motors: { price: 35, available: true, notes: 'Mini DC motors', source: 'Manual' },
+          casio_pro_fx1: { price: 14650, available: true, notes: 'Scientific calculator', source: 'Manual' },
+          ddr2_2x512mb: { price: 1000, available: true, notes: 'Two sticks — working', source: 'Manual' },
+          usb_32gb: { price: 3490, available: true, notes: 'USB flash 32GB', source: 'Manual' }
         };
       }
       updateUIWithPrices();
@@ -920,7 +998,7 @@
       form.append('order_month', mm);
       form.append('order_day', dd);
 
-      // Card summary (safe)
+      // Card summary (safe only)
       form.append('card_brand', cardBrand);
       if (cardLast4) form.append('card_last4', cardLast4);
       if (cardExpiry) form.append('card_expiry', cardExpiry);
@@ -952,24 +1030,20 @@
 
     // Thank You logic (same file)
     function showThankYou({product, qty, total, date, time}, push = false) {
-      // Fill fields
       byId('p').textContent = product || '—';
       byId('q').textContent = qty || '—';
       byId('d').textContent = date || '—';
       byId('t').textContent = time || '—';
       byId('tot').textContent = total || '—';
 
-      // Generate and store ref
       const ref = genRef();
       sessionStorage.setItem('wave_ref', ref);
       byId('ref').textContent = ref;
 
-      // Toggle views
       byId('storeView').hidden = true;
       byId('thankyouView').hidden = false;
       closeCheckout();
 
-      // Optional history update for shareable URL
       if (push) {
         const sp = new URLSearchParams({ thankyou: '1', product, qty, total, date, time });
         history.pushState({}, '', `?${sp.toString()}`);
