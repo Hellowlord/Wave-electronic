@@ -143,7 +143,7 @@
     }
     .row { display:flex; align-items:center; justify-content: space-between; gap:8px; }
     .qty input[type="number"] {
-      width: 84px; padding:8px 10px; border-radius:10px; border:1px solid rgba(148,163,184,0.16);
+      width: 100px; padding:8px 10px; border-radius:10px; border:1px solid rgba(148,163,184,0.16);
       background: rgba(2,6,23,0.55); color: var(--text);
     }
     .ship-options { display:grid; gap:8px; }
@@ -168,7 +168,7 @@
     .email-status.bad { color: var(--danger); }
     .email-status.checking { color: var(--accent); }
 
-    /* Sticky checkout bar (always visible at bottom of modal) */
+    /* Sticky checkout bar */
     .sticky-bar {
       display:flex; align-items:center; justify-content: space-between; gap:10px;
       padding: 10px 12px; background: rgba(2,6,23,0.98);
@@ -283,7 +283,7 @@
           </div>
         </div>
 
-        <div class="card" data-product-id="huawei_watch_batt" data-name="Huawei Watch (Battery Not Working)" data-tags="huawei watch wearable battery not working smartwatch" data-cats="wearables damaged" data-default-qty="2" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+Watch+%E2%80%94+Battery+Issue">
+        <div class="card" data-product-id="huawei_watch_batt" data-name="Huawei Watch (Battery Not Working)" data-tags="huawei watch wearable battery not working smartwatch" data-cats="wearables damaged" data-default-qty="1" data-img="https://placehold.co/600x400/0b1020/9fb1c0?text=Huawei+Watch+%E2%80%94+Battery+Issue">
           <img class="thumb" alt="Huawei Watch — battery not working" />
           <div class="card-body">
             <div class="name">Huawei Watch (Battery Not Working)</div>
@@ -556,54 +556,14 @@
     "updated_at": "2026-09-26T10:00:00Z",
     "currency": "EGP",
     "items": {
-      "zflip5_damaged": {
-        "price": 13000,
-        "available": false,
-        "notes": "Damaged screen — SOLD OUT",
-        "source": "Seller listing (edit as needed)"
-      },
-      "p30lite_working": {
-        "price": 4500,
-        "available": true,
-        "notes": "Used — working screen",
-        "source": "Market avg (Dubizzle EG — update link if you have one)"
-      },
-      "receiver_remote": {
-        "price": 15,
-        "available": true,
-        "notes": "Generic IR remote",
-        "source": "Local market"
-      },
-      "huawei_watch_batt": {
-        "price": 800,
-        "available": true,
-        "notes": "Battery not holding charge; sold as-is",
-        "source": "Estimate — update when confirmed"
-      },
-      "vibration_motors": {
-        "price": 35,
-        "available": true,
-        "notes": "Mini 3V DC motors (salvaged)",
-        "source": "Estimate — update when confirmed"
-      },
-      "casio_pro_fx1": {
-        "price": 14650,
-        "available": true,
-        "notes": "Scientific calculator — working",
-        "source": "User-specified"
-      },
-      "ddr2_2x512mb": {
-        "price": 1000,
-        "available": true,
-        "notes": "Two sticks — working",
-        "source": "User-specified"
-      },
-      "usb_32gb": {
-        "price": 3490,
-        "available": true,
-        "notes": "USB flash drive 32GB",
-        "source": "User-specified"
-      }
+      "zflip5_damaged": { "price": 13000, "available": false, "notes": "Damaged screen — SOLD OUT", "source": "Seller listing (edit as needed)" },
+      "p30lite_working": { "price": 4500, "available": true, "notes": "Used — working screen", "source": "Market avg (Dubizzle EG — update link if you have one)" },
+      "receiver_remote": { "price": 15, "available": true, "notes": "Generic IR remote", "source": "Local market" },
+      "huawei_watch_batt": { "price": 800, "available": true, "notes": "Battery not holding charge; sold as-is", "source": "Estimate — update when confirmed" },
+      "vibration_motors": { "price": 35, "available": true, "notes": "Mini 3V DC motors (salvaged)", "source": "Estimate — update when confirmed" },
+      "casio_pro_fx1": { "price": 14650, "available": true, "notes": "Scientific calculator — working", "source": "User-specified" },
+      "ddr2_2x512mb": { "price": 1000, "available": true, "notes": "Two sticks — working", "source": "User-specified" },
+      "usb_32gb": { "price": 3490, "available": true, "notes": "USB flash drive 32GB", "source": "User-specified" }
     }
   }
   </script>
@@ -618,6 +578,9 @@
     const TAX_RATE = 0;
     const CURRENCY = 'EGP';
 
+    // Per-product max quantity caps: default 1, vibration_motors 2
+    const MAX_QTY = { vibration_motors: 2 };
+
     const state = {
       prices: null,
       currentProductId: null,
@@ -625,6 +588,7 @@
       currentUnitPrice: 0,
       currentPriceSource: '',
       currentQty: 1,
+      currentMaxQty: 1,
       currentShipping: 'standard',
       availableMap: {},
     };
@@ -687,7 +651,7 @@
         updateUIWithPrices();
         return;
       }
-      // Fallback if embedded not present (not expected in single-file)
+      // Fallback if embedded not present
       try {
         const res = await fetch('./prices.json', { cache: 'no-store' });
         const data = await res.json();
@@ -752,14 +716,21 @@
       state.currentProductName = card.dataset.name;
       state.currentUnitPrice = state.prices[pid]?.price || 0;
       state.currentPriceSource = state.prices[pid]?.source || '';
-      state.currentQty = parseInt(card.dataset.defaultQty || '1', 10) || 1;
+
+      // Determine caps and starting qty
+      const maxQty = MAX_QTY[pid] || 1;
+      state.currentMaxQty = maxQty;
+      const starting = parseInt(card.dataset.defaultQty || '1', 10) || 1;
+      state.currentQty = Math.min(starting, maxQty);
       state.currentShipping = 'standard';
 
       // Fill UI
       byId('coProductName').textContent = state.currentProductName;
       byId('coPriceSource').textContent = (state.prices[pid]?.notes || '') + (state.currentPriceSource ? ` — Source: ${state.currentPriceSource}` : '');
       byId('coThumb').src = card.dataset.img || '';
-      byId('coQty').value = state.currentQty;
+      const qtyInput = byId('coQty');
+      qtyInput.max = String(maxQty);
+      qtyInput.value = state.currentQty;
 
       // Reset shipping selection
       qsa('input[name="shipping"]').forEach(r => r.checked = (r.value === 'standard'));
@@ -784,10 +755,16 @@
     }
 
     function refreshSummary() {
-      const qty = parseInt(byId('coQty').value || '1', 10);
-      const shipping = qsa('input[name="shipping"]').find(r => r.checked)?.value || 'standard';
+      const max = state.currentMaxQty || 1;
+      let qty = parseInt(byId('coQty').value || '1', 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      if (qty > max) qty = max;
 
-      state.currentQty = Math.max(1, qty);
+      // Reflect clamped qty back to input and state
+      byId('coQty').value = qty;
+      state.currentQty = qty;
+
+      const shipping = qsa('input[name="shipping"]').find(r => r.checked)?.value || 'standard';
       state.currentShipping = shipping;
 
       const unit = state.currentUnitPrice;
@@ -807,7 +784,14 @@
 
     function bindCheckoutUI() {
       byId('closeModal').addEventListener('click', closeCheckout);
-      byId('coQty').addEventListener('input', () => { if (byId('coQty').value < 1) byId('coQty').value = 1; refreshSummary(); });
+      byId('coQty').addEventListener('input', () => {
+        const max = state.currentMaxQty || 1;
+        let v = parseInt(byId('coQty').value || '1', 10);
+        if (isNaN(v) || v < 1) v = 1;
+        if (v > max) v = max;
+        byId('coQty').value = v;
+        refreshSummary();
+      });
       qsa('input[name="shipping"]').forEach(r => r.addEventListener('change', refreshSummary));
 
       const form = byId('checkoutForm');
@@ -925,7 +909,6 @@
         return;
       }
 
-      // Order numbers
       const unit = state.currentUnitPrice;
       const qty = state.currentQty;
       const subtotal = unit * qty;
@@ -1012,7 +995,6 @@
           body: form
         });
         if (resp.ok) {
-          // Show Thank You view in the same file
           const qp = { product: state.currentProductName, qty: String(qty), total: `${fmt(total)}`, date: `${yyyy}-${mm}-${dd}`, time: `${HH}:${MI}:${SS}` };
           showThankYou(qp, true);
         } else {
