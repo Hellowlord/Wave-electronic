@@ -1,1 +1,16 @@
-
+{
+  "updated_at": "2026-10-08T10:00:00Z",
+  "currency": "EGP",
+  "items": {
+    "zflip5_damaged": { "price": 13000, "available": false, "notes": "Damaged screen — SOLD OUT", "source": "Seller listing (edit as needed)" },
+    "p30lite_working": { "price": 4500, "available": true, "notes": "Used — working screen", "source": "Market avg (Dubizzle EG — update link if you have one)" },
+    "receiver_remote": { "price": 15, "available": true, "notes": "Generic IR remote", "source": "Local market" },
+    "huawei_watch_batt": { "price": 800, "available": true, "notes": "Battery not holding charge; sold as-is", "source": "Estimate — update when confirmed" },
+    "vibration_motors": { "price": 35, "available": true, "notes": "Mini 3V DC motors (salvaged)", "source": "Estimate — update when confirmed" },
+    "casio_pro_fx1": { "price": 14650, "available": true, "notes": "Scientific calculator — working", "source": "User-specified" },
+    "ddr2_2x512mb": { "price": 1000, "available": true, "notes": "Two sticks — working", "source": "User-specified" },
+    "usb_32gb": { "price": 3490, "available": true, "notes": "USB flash drive 32GB", "source": "User-specified" },
+    "guitar": { "price": 1000, "available": true, "notes": "Acoustic guitar — working", "source": "User-specified" },
+    "wilson_squash_racket": { "price": 1500, "available": true, "notes": "Wilson squash racket — 2 in stock, priced each", "source": "User-specified" }
+  }
+}
